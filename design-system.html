@@ -1,0 +1,2221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yonder Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══ TOKENS ════════════════════════════════════════════ */
+:root{
+  --p:#7c3aed;--pd:#6d28d9;--pl:#ede9fe;--pp:#f5f3ff;
+  --red:#ef4444;--red-bg:#fee2e2;
+  --amber:#d97706;--amber-bg:#fef3c7;
+  --blue:#2563eb;--blue-bg:#dbeafe;
+  --green:#16a34a;--green-bg:#dcfce7;
+  --traj-bg:#eaf4fe;--traj-txt:#4a90c4;
+  --faction-c:#b39ddb;
+  --bg:radial-gradient(ellipse at 20% 20%,#fce7f3 0%,#f0e4ff 35%,#e2d4f5 65%,#cdb6ec 100%);
+  --card-shadow:0 1px 3px rgba(80,0,120,.06),0 4px 16px rgba(80,0,120,.07);
+  --card-shadow-hover:0 4px 8px rgba(80,0,120,.09),0 8px 28px rgba(80,0,120,.12);
+  --card-r:12px;--f:'Heebo',sans-serif;--e:.18s ease;
+  --g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;
+  --g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;
+  --g800:#1f2937;--g900:#111827;
+  --nav-w:268px;--top-h:56px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);background:#fff;color:var(--g900);min-height:100vh;font-size:14px;line-height:1.6}
+
+/* ══ TOP BAR ══════════════════════════════════════════ */
+.top-bar{
+  position:fixed;top:0;left:0;right:0;height:var(--top-h);z-index:200;
+  background:#fff;border-bottom:1px solid var(--g200);
+  display:flex;align-items:center;gap:0;padding:0 24px 0 0;
+}
+.top-bar-logo{
+  width:var(--nav-w);flex-shrink:0;display:flex;align-items:center;gap:10px;
+  padding:0 24px;border-right:1px solid var(--g200);height:100%;
+}
+.top-bar-logo .mark{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,#9f67fa,var(--pd));
+  display:flex;align-items:center;justify-content:center;
+}
+.top-bar-logo .wordmark{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.top-bar-logo .wordmark span{color:var(--p)}
+.top-bar-logo .version{
+  margin-left:auto;font-size:10px;font-weight:700;color:var(--p);
+  background:var(--pl);border-radius:20px;padding:2px 8px;
+}
+.top-bar-right{flex:1;display:flex;align-items:center;gap:16px;padding-left:24px}
+.top-bar-right a{
+  font-size:13px;font-weight:500;color:var(--g500);text-decoration:none;transition:color var(--e);
+}
+.top-bar-right a:hover{color:var(--p)}
+.top-bar-right a.active{color:var(--p);font-weight:700}
+.top-bar-right .proto-link{
+  margin-left:auto;font-size:12px;font-weight:700;color:var(--p);
+  background:var(--pp);border:1.5px solid var(--pl);border-radius:8px;
+  padding:6px 14px;text-decoration:none;transition:all var(--e);
+}
+.top-bar-right .proto-link:hover{background:var(--pl)}
+
+/* ══ LAYOUT ═══════════════════════════════════════════ */
+.shell{display:flex;padding-top:var(--top-h)}
+
+/* ══ LEFT NAV ═════════════════════════════════════════ */
+.lnav{
+  width:var(--nav-w);flex-shrink:0;position:fixed;
+  top:var(--top-h);bottom:0;overflow-y:auto;
+  background:#fff;border-right:1px solid var(--g200);
+  padding:16px 0 40px;
+}
+.lnav::-webkit-scrollbar{width:4px}
+.lnav::-webkit-scrollbar-thumb{background:var(--g200);border-radius:2px}
+
+.nav-section-hd{
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--g400);padding:14px 20px 4px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 20px;font-size:13px;font-weight:500;color:var(--g600);
+  cursor:pointer;transition:all var(--e);border-left:2px solid transparent;
+  text-decoration:none;user-select:none;
+}
+.nav-item:hover{background:var(--g50);color:var(--g900)}
+.nav-item.active{
+  background:var(--pp);color:var(--p);font-weight:700;
+  border-left-color:var(--p);
+}
+.nav-item .nav-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:currentColor;opacity:.4;flex-shrink:0;
+}
+.nav-divider{height:1px;background:var(--g100);margin:8px 20px}
+
+/* ══ MAIN CONTENT ═════════════════════════════════════ */
+.main{margin-left:var(--nav-w);flex:1;min-width:0;min-height:100vh}
+
+/* Page (each nav section is a "page") */
+.page{display:none;max-width:960px;padding:48px 56px 80px}
+.page.active{display:block}
+
+/* Breadcrumb */
+.breadcrumb{
+  display:flex;align-items:center;gap:6px;margin-bottom:32px;
+  font-size:12px;color:var(--g400);
+}
+.breadcrumb a{color:var(--g400);text-decoration:none;transition:color var(--e)}
+.breadcrumb a:hover{color:var(--p)}
+.breadcrumb .sep{font-size:10px}
+.breadcrumb .current{color:var(--g700);font-weight:600}
+
+/* Page hero */
+.page-hero{margin-bottom:48px}
+.page-hero h1{font-size:40px;font-weight:900;letter-spacing:-.6px;color:var(--g900);line-height:1.1;margin-bottom:10px}
+.page-hero p{font-size:16px;color:var(--g500);max-width:620px;line-height:1.65}
+
+/* Tab nav (Overview | Guidelines | Specs) */
+.tab-nav{
+  display:flex;gap:0;border-bottom:2px solid var(--g200);
+  margin-bottom:40px;
+}
+.tab-nav-item{
+  padding:10px 20px;font-size:13px;font-weight:600;color:var(--g500);
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;
+  transition:all var(--e);user-select:none;
+}
+.tab-nav-item:hover{color:var(--g900)}
+.tab-nav-item.active{color:var(--p);border-bottom-color:var(--p)}
+
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* Section headings with number */
+.sec{margin-bottom:48px}
+.sec-hd{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.sec-num{
+  width:28px;height:28px;border-radius:50%;background:var(--p);
+  color:#fff;font-size:12px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.sec-hd h2{font-size:20px;font-weight:800;letter-spacing:-.2px}
+.sec-hd h3{font-size:16px;font-weight:700}
+.sec-body{font-size:14px;color:var(--g600);line-height:1.7;max-width:680px;margin-bottom:20px}
+.sec-body p+p{margin-top:10px}
+
+/* Sub section */
+.subsec{margin-bottom:32px}
+.subsec-hd{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g400);margin-bottom:12px}
+
+/* ══ PREVIEW BOX ══════════════════════════════════════ */
+.preview{
+  background:var(--g50);border:1.5px solid var(--g200);
+  border-radius:16px;padding:32px;margin-bottom:8px;
+}
+.preview.white{background:#fff}
+.preview.app-bg{background:var(--bg)}
+.preview.dark{background:var(--g900)}
+
+/* ══ DO / DON'T ═══════════════════════════════════════ */
+.dd-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px}
+.dd-card{border-radius:14px;overflow:hidden;border:1.5px solid var(--g200)}
+.dd-example{padding:28px 24px;background:var(--g50);min-height:120px;display:flex;align-items:center;justify-content:center}
+.dd-example.white{background:#fff}
+.dd-example.app-bg{background:var(--bg)}
+.dd-label{
+  display:flex;align-items:center;gap:7px;
+  padding:10px 16px;font-size:12px;font-weight:700;
+}
+.dd-label svg{flex-shrink:0}
+.dd-card.do .dd-label{color:#15803d;background:#f0fdf4;border-top:1.5px solid #bbf7d0}
+.dd-card.dont .dd-label{color:#dc2626;background:#fef2f2;border-top:1.5px solid #fecaca}
+.dd-caption{padding:0 16px 14px;font-size:12px;color:var(--g600);line-height:1.6}
+
+/* ══ ANATOMY ══════════════════════════════════════════ */
+.anatomy-wrap{position:relative;display:inline-block;max-width:100%}
+.anatomy-num{
+  position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#1f2937;color:#fff;font-size:10px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);pointer-events:none;
+}
+.anatomy-legend{display:flex;flex-direction:column;gap:6px;margin-top:16px}
+.anatomy-legend-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--g700)}
+.anatomy-legend-num{
+  width:20px;height:20px;border-radius:50%;background:var(--g900);
+  color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;
+}
+
+/* ══ SPEC TABLE ═══════════════════════════════════════ */
+.spec-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+.spec-table th{
+  text-align:left;padding:10px 14px;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--g400);
+  background:var(--g50);border-bottom:1.5px solid var(--g200);
+}
+.spec-table td{
+  padding:10px 14px;border-bottom:1px solid var(--g100);
+  vertical-align:middle;color:var(--g700);
+}
+.spec-table tr:last-child td{border-bottom:none}
+.spec-table tr:hover td{background:var(--g50)}
+.spec-table code{
+  font-family:Menlo,Monaco,Consolas,monospace;font-size:11px;
+  background:var(--pp);color:var(--p);padding:2px 6px;border-radius:4px;
+}
+.spec-swatch{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid rgba(0,0,0,.1)}
+
+/* ══ COMPONENT TOKENS ═════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:9px;padding:9px 18px;font-family:var(--f);font-size:13px;font-weight:700;cursor:pointer;transition:all var(--e);text-decoration:none}
+.btn-p{background:linear-gradient(135deg,#9f67fa,var(--pd));color:#fff;box-shadow:0 3px 10px rgba(124,58,237,.3)}
+.btn-p:hover{box-shadow:0 5px 18px rgba(124,58,237,.42);transform:translateY(-1px)}
+.btn-o{background:#fff;color:var(--p);border:1.5px solid var(--pl)}
+.btn-o:hover{background:var(--pp)}
+.btn-d{background:var(--g100);color:var(--g400);cursor:not-allowed}
+.btn-tonal{background:var(--pp);color:var(--p);border:none}
+.btn-tonal:hover{background:var(--pl)}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1.5px solid #fca5a5}
+.btn-sm{padding:6px 12px;font-size:11px;border-radius:7px}
+.btn-full{width:100%;justify-content:center}
+
+.imp{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.imp-h{background:var(--red);color:#fff}
+.imp-m{background:var(--amber);color:#fff}
+.imp-l{background:var(--blue);color:#fff}
+.traj{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:var(--traj-bg);color:var(--traj-txt)}
+.sbadge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.s-act{background:var(--green-bg);color:var(--green)}
+.s-arc{background:var(--g100);color:var(--g500)}
+.s-dft{background:var(--amber-bg);color:var(--amber)}
+.faction-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase}
+.ft-adv{background:#fee2e2;color:#dc2626}
+.ft-susp{background:var(--amber-bg);color:#b45309}
+.ft-aln{background:var(--green-bg);color:var(--green)}
+.ft-neut{background:var(--g100);color:var(--g500)}
+
+.chip{border:1.5px solid var(--g200);background:#fff;color:var(--g600);border-radius:20px;padding:5px 13px;font-family:var(--f);font-size:12px;font-weight:600;cursor:pointer;transition:all var(--e)}
+.chip:hover{border-color:var(--p);color:var(--p)}
+.chip.on{background:var(--p);border-color:var(--p);color:#fff}
+.chip-hi.on{background:var(--red);border-color:var(--red);color:#fff}
+.chip-md.on{background:var(--amber);border-color:var(--amber);color:#fff}
+.chip-lo.on{background:var(--blue);border-color:var(--blue);color:#fff}
+
+.nc{background:#fff;border-radius:var(--card-r);padding:16px 18px;box-shadow:var(--card-shadow);cursor:pointer;transition:all var(--e);border:1px solid rgba(220,200,245,.25)}
+.nc:hover{box-shadow:var(--card-shadow-hover);transform:translateY(-1px)}
+.nc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.nc-title{font-size:13.5px;font-weight:700;color:var(--g800);line-height:1.35}
+.nc-badges{display:flex;align-items:center;gap:6px;margin-bottom:9px;flex-wrap:wrap}
+.nc-factions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:9px}
+.nc-fac{font-size:11px;font-weight:600;color:var(--faction-c)}
+.nc-tweet{font-size:12px;color:var(--g500);line-height:1.55;padding-bottom:10px;border-bottom:1px solid var(--g100)}
+.nc-foot{display:flex;align-items:center;gap:10px;padding-top:10px}
+.nc-ina-lbl{font-size:10px;color:var(--g400);font-weight:600}
+.nc-ina-bar{height:4px;background:var(--g100);border-radius:2px;overflow:hidden;margin-top:3px}
+.nc-ina-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#a78bfa,#7c3aed)}
+.nc-flagged{position:absolute;left:-2px;top:10px;z-index:2;background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:3px 8px 3px 6px;border-radius:0 10px 10px 0;box-shadow:0 2px 6px rgba(220,38,38,.3);display:flex;align-items:center;gap:4px}
+
+.fav{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.fav-adv{background:linear-gradient(135deg,#f87171,#dc2626)}
+.fav-susp{background:linear-gradient(135deg,#fbbf24,#d97706)}
+.fav-aln{background:linear-gradient(135deg,#86efac,#16a34a)}
+.fav-neut{background:linear-gradient(135deg,#93c5fd,#2563eb)}
+
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.fg label{font-size:12px;font-weight:700;color:var(--g700)}
+.fg input,.fg select,.fg textarea{border:1.5px solid var(--g200);border-radius:9px;padding:9px 13px;font-family:var(--f);font-size:13px;color:var(--g900);background:#fff;outline:none;transition:border-color var(--e),box-shadow var(--e)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.fg input.error{border-color:var(--red)}
+.fg input.success{border-color:var(--green)}
+.fg textarea{resize:vertical;min-height:72px}
+.fg-hint{font-size:11px;color:var(--g400);margin-top:2px}
+.fg-err{font-size:11px;color:var(--red);margin-top:2px}
+
+/* Swatch grid */
+.swatch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.swatch{border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,.07)}
+.sw-color{height:60px}
+.sw-info{padding:9px 11px;background:#fff}
+.sw-name{font-size:11px;font-weight:700;color:var(--g800);margin-bottom:2px}
+.sw-hex{font-size:11px;color:var(--g400);font-family:monospace}
+.sw-token{font-size:10px;color:var(--p);font-family:monospace;margin-top:2px}
+
+/* Gray ramp */
+.gray-ramp{display:flex;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,.06)}
+.gray-step{flex:1;height:48px;display:flex;align-items:flex-end;padding:5px 7px}
+.gray-step span{font-size:9px;font-family:monospace;opacity:.8}
+
+/* Type scale */
+.type-table{width:100%;border-collapse:collapse}
+.type-table tr{border-bottom:1px solid var(--g100)}
+.type-table tr:last-child{border-bottom:none}
+.type-table td{padding:14px 0;vertical-align:middle}
+.type-meta{width:160px;padding-right:20px}
+.type-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400)}
+.type-spec{font-size:11px;color:var(--g400);font-family:monospace;margin-top:2px}
+
+/* Radius scale */
+.radius-row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+.radius-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.radius-box{width:48px;height:48px;background:var(--p)}
+.radius-label{font-size:10px;color:var(--g500);text-align:center;line-height:1.4}
+
+/* Shadow scale */
+.shadow-row{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.shadow-item{display:flex;flex-direction:column;align-items:center;gap:10px}
+.shadow-box{width:100px;height:56px;background:#fff;border-radius:var(--card-r)}
+.shadow-label{font-size:10px;color:var(--g500);text-align:center;line-height:1.5}
+
+/* Icon grid */
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.icon-tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;transition:all var(--e);cursor:default}
+.icon-tile:hover{background:var(--pp);border-color:var(--pl)}
+.icon-tile svg{width:22px;height:22px;color:var(--g700)}
+.icon-tile span{font-size:10px;color:var(--g500);text-align:center;line-height:1.3}
+
+/* State pills */
+.state-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.state-pill{
+  padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;
+  border:1.5px solid var(--g200);color:var(--g600);background:#fff;
+}
+.state-pill.enabled{border-color:var(--p);color:var(--p);background:var(--pp)}
+.state-pill.hovered{border-color:var(--g400);background:var(--g100)}
+.state-pill.focused{border-color:var(--p);box-shadow:0 0 0 3px rgba(124,58,237,.2);background:#fff}
+.state-pill.pressed{background:var(--pl);color:var(--pd);border-color:var(--p)}
+.state-pill.disabled{opacity:.4;cursor:not-allowed}
+
+/* Inline utility */
+.flex{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.flex-col{display:flex;flex-direction:column;gap:10px}
+.mt4{margin-top:4px}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt24{margin-top:24px}
+.mb8{margin-bottom:8px}.mb16{margin-bottom:16px}.mb24{margin-bottom:24px}
+.divider{height:1px;background:var(--g100);margin:28px 0}
+.label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:8px}
+.callout{background:var(--pp);border-left:3px solid var(--p);border-radius:0 10px 10px 0;padding:12px 16px;font-size:13px;color:var(--g700);line-height:1.6}
+.callout strong{color:var(--p)}
+
+/* Sbn (sidebar nav item preview) */
+.sbn-demo-wrap{width:72px;background:#fff;border-radius:14px;padding:8px 0;box-shadow:var(--card-shadow);display:flex;flex-direction:column;gap:2px}
+.sbn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 0;width:100%;border:none;background:none;cursor:pointer;font-family:var(--f);color:var(--g400);transition:all var(--e)}
+.sbn-item.on{color:var(--p)}
+.sbn-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:transparent;transition:background var(--e)}
+.sbn-item.on .sbn-ico{background:var(--pl)}
+.sbn-ico svg{width:18px;height:18px;stroke-width:2}
+.sbn-lbl{font-size:9.5px;font-weight:600;letter-spacing:.02em}
+
+/* Usage list */
+.use-list{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+.use-item{display:flex;gap:12px;align-items:flex-start}
+.use-icon{width:32px;height:32px;border-radius:8px;background:var(--pp);color:var(--p);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.use-icon svg{width:16px;height:16px}
+.use-text strong{font-size:13px;color:var(--g800);display:block;margin-bottom:2px}
+.use-text span{font-size:12px;color:var(--g500);line-height:1.5}
+
+/* Quote / example emphasis */
+.example-label{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g400);margin-bottom:8px}
+
+/* Overview hero image */
+.hero-art{
+  width:100%;border-radius:16px;overflow:hidden;
+  background:var(--bg);padding:36px 32px;
+  display:flex;align-items:center;justify-content:center;
+  min-height:200px;margin-bottom:12px;
+  position:relative;
+}
+
+/* Convo card (used in patterns) */
+.convo-card{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border-radius:10px;border:1.5px solid var(--g200);transition:all var(--e);cursor:pointer}
+.convo-card:hover{border-color:var(--pl);box-shadow:var(--card-shadow)}
+.convo-ic{width:36px;height:36px;background:var(--pp);border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--p);flex-shrink:0}
+.convo-title{font-size:13px;font-weight:700;color:var(--g800)}
+.convo-meta{font-size:11px;color:var(--g400);margin-top:2px}
+</style>
+</head>
+<body>
+
+<!-- ══ TOP BAR ═════════════════════════════════════════ -->
+<header class="top-bar">
+  <div class="top-bar-logo">
+    <div class="mark">
+      <svg viewBox="0 0 28 28" fill="none" width="16" height="16">
+        <line x1="14" y1="2" x2="14" y2="26" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="2" y1="14" x2="26" y2="14" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="5.17" y1="5.17" x2="22.83" y2="22.83" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <line x1="22.83" y1="5.17" x2="5.17" y2="22.83" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="wordmark"><span>×</span> yonder</span>
+    <span class="version">v1.0</span>
+  </div>
+  <div class="top-bar-right">
+    <a href="#" class="active" onclick="navTo('overview');return false">Design System</a>
+    <a href="/" class="proto-link">← View Prototype</a>
+  </div>
+</header>
+
+<!-- ══ SHELL ═══════════════════════════════════════════ -->
+<div class="shell">
+
+  <!-- LEFT NAV -->
+  <nav class="lnav">
+    <div class="nav-section-hd">Get Started</div>
+    <a class="nav-item active" onclick="navTo('overview')"><span class="nav-dot"></span>Overview</a>
+
+    <div class="nav-divider"></div>
+    <div class="nav-section-hd">Foundations</div>
+    <a class="nav-item" onclick="navTo('color')"><span class="nav-dot"></span>Color</a>
+    <a class="nav-item" onclick="navTo('typography')"><span class="nav-dot"></span>Typography</a>
+    <a class="nav-item" onclick="navTo('elevation')"><span class="nav-dot"></span>Spacing &amp; Elevation</a>
+    <a class="nav-item" onclick="navTo('gradients')"><span class="nav-dot"></span>Gradients &amp; Motion</a>
+
+    <div class="nav-divider"></div>
+    <div class="nav-section-hd">Components</div>
+    <a class="nav-item" onclick="navTo('buttons')"><span class="nav-dot"></span>Buttons</a>
+    <a class="nav-item" onclick="navTo('badges')"><span class="nav-dot"></span>Badges &amp; Pills</a>
+    <a class="nav-item" onclick="navTo('chips')"><span class="nav-dot"></span>Chips</a>
+    <a class="nav-item" onclick="navTo('cards')"><span class="nav-dot"></span>Narrative Cards</a>
+    <a class="nav-item" onclick="navTo('avatars')"><span class="nav-dot"></span>Faction Avatars</a>
+    <a class="nav-item" onclick="navTo('tabs')"><span class="nav-dot"></span>Tabs</a>
+    <a class="nav-item" onclick="navTo('navigation')"><span class="nav-dot"></span>Navigation</a>
+    <a class="nav-item" onclick="navTo('forms')"><span class="nav-dot"></span>Form Controls</a>
+    <a class="nav-item" onclick="navTo('charts')"><span class="nav-dot"></span>Charts</a>
+
+    <div class="nav-divider"></div>
+    <div class="nav-section-hd">Patterns</div>
+    <a class="nav-item" onclick="navTo('icons')"><span class="nav-dot"></span>Icons</a>
+    <a class="nav-item" onclick="navTo('brand')"><span class="nav-dot"></span>Brand &amp; Identity</a>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+<!-- ═══════════════════════════════════════════
+     PAGE: OVERVIEW
+════════════════════════════════════════════ -->
+<section class="page active" id="page-overview">
+  <div class="page-hero">
+    <h1>Yonder Design System</h1>
+    <p>A unified visual language for the Yonder social media intelligence platform. Built for speed, clarity, and consistency across every screen analysts interact with daily.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-num">1</div><h2>Principles</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div style="background:var(--pp);border-radius:14px;padding:24px">
+        <div style="font-size:22px;margin-bottom:10px">🎯</div>
+        <div style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:6px">Signal over noise</div>
+        <div style="font-size:13px;color:var(--g600);line-height:1.6">Every component prioritises actionable intelligence. Visual hierarchy always points analysts to what needs attention first.</div>
+      </div>
+      <div style="background:#fdf2f8;border-radius:14px;padding:24px">
+        <div style="font-size:22px;margin-bottom:10px">⚡</div>
+        <div style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:6px">Fast &amp; fluid</div>
+        <div style="font-size:13px;color:var(--g600);line-height:1.6">Transitions at 180ms. Hover feedback on every interactive element. The interface responds before the analyst has time to wonder.</div>
+      </div>
+      <div style="background:#f0fdf4;border-radius:14px;padding:24px">
+        <div style="font-size:22px;margin-bottom:10px">🧩</div>
+        <div style="font-size:14px;font-weight:800;color:var(--g900);margin-bottom:6px">Composable</div>
+        <div style="font-size:13px;color:var(--g600);line-height:1.6">Tokens, not one-offs. Every color, shadow, and radius is a CSS custom property so the whole system can be re-themed in minutes.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-num">2</div><h2>Token Architecture</h2></div>
+    <p class="sec-body">All values live in CSS custom properties on <code style="background:var(--pp);color:var(--p);padding:2px 6px;border-radius:4px;font-size:12px">:root</code>. Components reference tokens — never raw values — so a single change propagates everywhere.</p>
+    <div style="background:var(--g900);border-radius:14px;padding:24px;font-family:monospace;font-size:12px;line-height:1.9;color:#e2e8f0;overflow-x:auto">
+      <span style="color:#6b7280">/* Brand */</span><br>
+      <span style="color:#c084fc">--p</span>: <span style="color:#86efac">#7c3aed</span>; &nbsp;<span style="color:#c084fc">--pd</span>: <span style="color:#86efac">#6d28d9</span>; &nbsp;<span style="color:#c084fc">--pl</span>: <span style="color:#86efac">#ede9fe</span>;<br>
+      <span style="color:#6b7280">/* Semantic — Impact */</span><br>
+      <span style="color:#c084fc">--red</span>: <span style="color:#86efac">#ef4444</span>; &nbsp;<span style="color:#c084fc">--amber</span>: <span style="color:#86efac">#d97706</span>; &nbsp;<span style="color:#c084fc">--blue</span>: <span style="color:#86efac">#2563eb</span>;<br>
+      <span style="color:#6b7280">/* Surfaces */</span><br>
+      <span style="color:#c084fc">--bg</span>: <span style="color:#86efac">radial-gradient(ellipse at 20% 20%, #fce7f3 0%, #cdb6ec 100%)</span>;<br>
+      <span style="color:#c084fc">--card-shadow</span>: <span style="color:#86efac">0 1px 3px rgba(80,0,120,.06), 0 4px 16px rgba(80,0,120,.07)</span>;<br>
+      <span style="color:#c084fc">--card-r</span>: <span style="color:#86efac">12px</span>; &nbsp;<span style="color:#c084fc">--f</span>: <span style="color:#86efac">'Heebo', sans-serif</span>; &nbsp;<span style="color:#c084fc">--e</span>: <span style="color:#86efac">.18s ease</span>;
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-num">3</div><h2>Quick Reference</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+      <div onclick="navTo('color')" style="padding:16px;background:var(--g50);border-radius:12px;cursor:pointer;border:1.5px solid var(--g200);transition:all .18s ease" onmouseover="this.style.borderColor='#7c3aed';this.style.background='#f5f3ff'" onmouseout="this.style.borderColor='#e5e7eb';this.style.background='#f9fafb'">
+        <div style="font-size:20px;margin-bottom:8px">🎨</div>
+        <div style="font-size:13px;font-weight:700;color:var(--g800)">Color</div>
+        <div style="font-size:11px;color:var(--g400);margin-top:3px">12 semantic tokens</div>
+      </div>
+      <div onclick="navTo('typography')" style="padding:16px;background:var(--g50);border-radius:12px;cursor:pointer;border:1.5px solid var(--g200);transition:all .18s ease" onmouseover="this.style.borderColor='#7c3aed';this.style.background='#f5f3ff'" onmouseout="this.style.borderColor='#e5e7eb';this.style.background='#f9fafb'">
+        <div style="font-size:20px;margin-bottom:8px">Aa</div>
+        <div style="font-size:13px;font-weight:700;color:var(--g800)">Typography</div>
+        <div style="font-size:11px;color:var(--g400);margin-top:3px">Heebo, 7 type roles</div>
+      </div>
+      <div onclick="navTo('buttons')" style="padding:16px;background:var(--g50);border-radius:12px;cursor:pointer;border:1.5px solid var(--g200);transition:all .18s ease" onmouseover="this.style.borderColor='#7c3aed';this.style.background='#f5f3ff'" onmouseout="this.style.borderColor='#e5e7eb';this.style.background='#f9fafb'">
+        <div style="font-size:20px;margin-bottom:8px">🔘</div>
+        <div style="font-size:13px;font-weight:700;color:var(--g800)">Buttons</div>
+        <div style="font-size:11px;color:var(--g400);margin-top:3px">4 variants, 3 sizes</div>
+      </div>
+      <div onclick="navTo('cards')" style="padding:16px;background:var(--g50);border-radius:12px;cursor:pointer;border:1.5px solid var(--g200);transition:all .18s ease" onmouseover="this.style.borderColor='#7c3aed';this.style.background='#f5f3ff'" onmouseout="this.style.borderColor='#e5e7eb';this.style.background='#f9fafb'">
+        <div style="font-size:20px;margin-bottom:8px">🗂</div>
+        <div style="font-size:13px;font-weight:700;color:var(--g800)">Cards</div>
+        <div style="font-size:11px;color:var(--g400);margin-top:3px">Standard + Flagged</div>
+      </div>
+      <div onclick="navTo('icons')" style="padding:16px;background:var(--g50);border-radius:12px;cursor:pointer;border:1.5px solid var(--g200);transition:all .18s ease" onmouseover="this.style.borderColor='#7c3aed';this.style.background='#f5f3ff'" onmouseout="this.style.borderColor='#e5e7eb';this.style.background='#f9fafb'">
+        <div style="font-size:20px;margin-bottom:8px">✦</div>
+        <div style="font-size:13px;font-weight:700;color:var(--g800)">Icons</div>
+        <div style="font-size:11px;color:var(--g400);margin-top:3px">22 inline SVGs</div>
+      </div>
+      <div onclick="navTo('charts')" style="padding:16px;background:var(--g50);border-radius:12px;cursor:pointer;border:1.5px solid var(--g200);transition:all .18s ease" onmouseover="this.style.borderColor='#7c3aed';this.style.background='#f5f3ff'" onmouseout="this.style.borderColor='#e5e7eb';this.style.background='#f9fafb'">
+        <div style="font-size:20px;margin-bottom:8px">📊</div>
+        <div style="font-size:13px;font-weight:700;color:var(--g800)">Charts</div>
+        <div style="font-size:11px;color:var(--g400);margin-top:3px">3 SVG chart types</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: COLOR
+════════════════════════════════════════════ -->
+<section class="page" id="page-color">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Foundations</span><span class="sep">›</span><span class="current">Color</span></div>
+  <div class="page-hero">
+    <h1>Color</h1>
+    <p>Yonder's color system encodes meaning at a glance. Purple signals the brand and primary actions. Red, amber, and blue map directly to High, Moderate, and Low narrative impact — analysts learn the system once and read it instantly.</p>
+  </div>
+
+  <div class="tab-nav" data-group="color">
+    <div class="tab-nav-item active" data-tab="color-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="color-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="color-specs">Specs</div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="tab-panel active" id="tab-color-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Brand — Primary Purple</h2></div>
+      <p class="sec-body">Purple is the primary brand color. It appears on call-to-action buttons, active nav states, focus rings, links, and interactive chips. Four tints provide the full range from bold (--p) to nearly invisible (--pp) for hover backgrounds.</p>
+      <div class="preview white">
+        <div class="swatch-grid">
+          <div class="swatch"><div class="sw-color" style="background:#7c3aed"></div><div class="sw-info"><div class="sw-name">Purple</div><div class="sw-hex">#7c3aed</div><div class="sw-token">--p</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#6d28d9"></div><div class="sw-info"><div class="sw-name">Purple Dark</div><div class="sw-hex">#6d28d9</div><div class="sw-token">--pd</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#ede9fe"></div><div class="sw-info"><div class="sw-name">Purple Light</div><div class="sw-hex">#ede9fe</div><div class="sw-token">--pl</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#f5f3ff"></div><div class="sw-info"><div class="sw-name">Purple Pale</div><div class="sw-hex">#f5f3ff</div><div class="sw-token">--pp</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Semantic — Impact Colors</h2></div>
+      <p class="sec-body">Impact colors are the most critical semantic system in the UI. They appear on narrative cards, filter chips, and impact badges. Each color has a full-saturation pill variant and a light background variant for surfaces.</p>
+      <div class="preview white">
+        <div class="swatch-grid">
+          <div class="swatch"><div class="sw-color" style="background:#ef4444"></div><div class="sw-info"><div class="sw-name">Red — High</div><div class="sw-hex">#ef4444</div><div class="sw-token">--red</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#fee2e2"></div><div class="sw-info"><div class="sw-name">Red Background</div><div class="sw-hex">#fee2e2</div><div class="sw-token">--red-bg</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#d97706"></div><div class="sw-info"><div class="sw-name">Amber — Moderate</div><div class="sw-hex">#d97706</div><div class="sw-token">--amber</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#fef3c7"></div><div class="sw-info"><div class="sw-name">Amber Background</div><div class="sw-hex">#fef3c7</div><div class="sw-token">--amber-bg</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#2563eb"></div><div class="sw-info"><div class="sw-name">Blue — Low</div><div class="sw-hex">#2563eb</div><div class="sw-token">--blue</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#dbeafe"></div><div class="sw-info"><div class="sw-name">Blue Background</div><div class="sw-hex">#dbeafe</div><div class="sw-token">--blue-bg</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#eaf4fe"></div><div class="sw-info"><div class="sw-name">Trajectory BG</div><div class="sw-hex">#eaf4fe</div><div class="sw-token">--traj-bg</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#4a90c4"></div><div class="sw-info"><div class="sw-name">Trajectory Text</div><div class="sw-hex">#4a90c4</div><div class="sw-token">--traj-txt</div></div></div>
+          <div class="swatch"><div class="sw-color" style="background:#b39ddb"></div><div class="sw-info"><div class="sw-name">Faction Label</div><div class="sw-hex">#b39ddb</div><div class="sw-token">--faction-c</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">3</div><h2>Neutral Gray Scale</h2></div>
+      <p class="sec-body">Grays provide the full tonal range for text, borders, backgrounds, and disabled states. All 10 steps map to Tailwind's gray-50 through gray-900 for developer familiarity.</p>
+      <div class="preview white">
+        <div class="gray-ramp">
+          <div class="gray-step" style="background:#f9fafb"><span style="color:#9ca3af">50</span></div>
+          <div class="gray-step" style="background:#f3f4f6"><span style="color:#9ca3af">100</span></div>
+          <div class="gray-step" style="background:#e5e7eb"><span style="color:#9ca3af">200</span></div>
+          <div class="gray-step" style="background:#d1d5db"><span style="color:#9ca3af">300</span></div>
+          <div class="gray-step" style="background:#9ca3af"><span style="color:#fff">400</span></div>
+          <div class="gray-step" style="background:#6b7280"><span style="color:#fff">500</span></div>
+          <div class="gray-step" style="background:#4b5563"><span style="color:#fff">600</span></div>
+          <div class="gray-step" style="background:#374151"><span style="color:#fff">700</span></div>
+          <div class="gray-step" style="background:#1f2937"><span style="color:#fff">800</span></div>
+          <div class="gray-step" style="background:#111827"><span style="color:#fff">900</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GUIDELINES -->
+  <div class="tab-panel" id="tab-color-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Impact Color Usage</h2></div>
+      <p class="sec-body">The red/amber/blue impact system must be used consistently. An analyst who sees red anywhere in the UI should immediately associate it with High impact — never use red for decorative purposes.</p>
+      <div class="dd-grid">
+        <div class="dd-card do">
+          <div class="dd-example white" style="flex-direction:column;gap:8px">
+            <span class="imp imp-h">High Impact</span>
+            <span class="imp imp-m">Moderate Impact</span>
+            <span class="imp imp-l">Low Impact</span>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Use red, amber, and blue exclusively for impact levels. Analysts rely on color memory to scan cards quickly.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example white" style="flex-direction:column;gap:8px">
+            <button class="btn" style="background:#ef4444;color:#fff;font-size:11px;padding:5px 12px;border-radius:6px">Delete account</button>
+            <button class="btn" style="background:#d97706;color:#fff;font-size:11px;padding:5px 12px;border-radius:6px">Save draft</button>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't reuse impact colors for unrelated UI actions (like delete or save). Reserve them exclusively for the impact system.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Accessibility</h2></div>
+      <div class="callout">
+        <strong>WCAG AA</strong> — All text/background combinations must meet 4.5:1 contrast ratio. Primary purple (#7c3aed) on white achieves 6.2:1. White on impact red (#ef4444) achieves 4.6:1. Never render small text using <code style="background:var(--pl);padding:1px 4px;border-radius:3px">--faction-c</code> on white — it fails at 2.9:1 and must be used at 14px+ bold only.
+      </div>
+    </div>
+  </div>
+
+  <!-- SPECS -->
+  <div class="tab-panel" id="tab-color-specs">
+    <table class="spec-table">
+      <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+      <tbody>
+        <tr><td><code>--p</code></td><td><span class="spec-swatch" style="background:#7c3aed"></span>#7c3aed</td><td>Primary actions, active states, links</td></tr>
+        <tr><td><code>--pd</code></td><td><span class="spec-swatch" style="background:#6d28d9"></span>#6d28d9</td><td>Button gradient end, pressed states</td></tr>
+        <tr><td><code>--pl</code></td><td><span class="spec-swatch" style="background:#ede9fe"></span>#ede9fe</td><td>Active sidebar background, chip on-state</td></tr>
+        <tr><td><code>--pp</code></td><td><span class="spec-swatch" style="background:#f5f3ff"></span>#f5f3ff</td><td>Hover backgrounds, tonal button</td></tr>
+        <tr><td><code>--red</code></td><td><span class="spec-swatch" style="background:#ef4444"></span>#ef4444</td><td>High impact badges, flagged strip</td></tr>
+        <tr><td><code>--red-bg</code></td><td><span class="spec-swatch" style="background:#fee2e2"></span>#fee2e2</td><td>High impact chip background</td></tr>
+        <tr><td><code>--amber</code></td><td><span class="spec-swatch" style="background:#d97706"></span>#d97706</td><td>Moderate impact badges</td></tr>
+        <tr><td><code>--amber-bg</code></td><td><span class="spec-swatch" style="background:#fef3c7"></span>#fef3c7</td><td>Moderate impact chip background</td></tr>
+        <tr><td><code>--blue</code></td><td><span class="spec-swatch" style="background:#2563eb"></span>#2563eb</td><td>Low impact badges</td></tr>
+        <tr><td><code>--blue-bg</code></td><td><span class="spec-swatch" style="background:#dbeafe"></span>#dbeafe</td><td>Low impact chip background</td></tr>
+        <tr><td><code>--traj-bg</code></td><td><span class="spec-swatch" style="background:#eaf4fe"></span>#eaf4fe</td><td>Trajectory pill background</td></tr>
+        <tr><td><code>--traj-txt</code></td><td><span class="spec-swatch" style="background:#4a90c4"></span>#4a90c4</td><td>Trajectory pill text and icon</td></tr>
+        <tr><td><code>--faction-c</code></td><td><span class="spec-swatch" style="background:#b39ddb"></span>#b39ddb</td><td>Faction name labels on cards</td></tr>
+        <tr><td><code>--green</code></td><td><span class="spec-swatch" style="background:#16a34a"></span>#16a34a</td><td>Active conversation status</td></tr>
+        <tr><td><code>--green-bg</code></td><td><span class="spec-swatch" style="background:#dcfce7"></span>#dcfce7</td><td>Active status badge background</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: TYPOGRAPHY
+════════════════════════════════════════════ -->
+<section class="page" id="page-typography">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Foundations</span><span class="sep">›</span><span class="current">Typography</span></div>
+  <div class="page-hero">
+    <h1>Typography</h1>
+    <p>Heebo is the single typeface across all weights and sizes. Its geometric forms and wide range of weights — from Light (300) to Black (900) — make it equally suited to data-dense cards and bold display headings.</p>
+  </div>
+
+  <div class="tab-nav" data-group="typography">
+    <div class="tab-nav-item active" data-tab="typ-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="typ-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="typ-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-typ-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Type Scale</h2></div>
+      <p class="sec-body">Seven type roles cover every use case from the page-level Daily Digest heading down to the 10px micro labels on inauthenticity bars. Each role has a fixed size, weight, and letter-spacing triplet — never mix them ad-hoc.</p>
+      <div class="preview white">
+        <table class="type-table" style="width:100%">
+          <tr>
+            <td class="type-meta"><div class="type-lbl">Display</div><div class="type-spec">36px · 900 · ls -.6px</div></td>
+            <td><span style="font-size:36px;font-weight:900;letter-spacing:-.6px;color:var(--g900)">McDonalds Daily Digest</span></td>
+          </tr>
+          <tr>
+            <td class="type-meta"><div class="type-lbl">Heading 1</div><div class="type-spec">22px · 800 · ls -.3px</div></td>
+            <td><span style="font-size:22px;font-weight:800;letter-spacing:-.3px;color:var(--g900)">Social Media Insights</span></td>
+          </tr>
+          <tr>
+            <td class="type-meta"><div class="type-lbl">Heading 2</div><div class="type-spec">16px · 700</div></td>
+            <td><span style="font-size:16px;font-weight:700;color:var(--g900)">Narrative Overview — April</span></td>
+          </tr>
+          <tr>
+            <td class="type-meta"><div class="type-lbl">Card Title</div><div class="type-spec">13.5px · 700</div></td>
+            <td><span style="font-size:13.5px;font-weight:700;color:var(--g800)">McDonalds, TigrayGenocide</span></td>
+          </tr>
+          <tr>
+            <td class="type-meta"><div class="type-lbl">Body</div><div class="type-spec">13px · 400 · lh 1.7</div></td>
+            <td><span style="font-size:13px;color:var(--g600);line-height:1.7">We ask @McDonalds to take a stance against the #TigrayGenocide, as well as the massacres happening across the country of Ethiopia.</span></td>
+          </tr>
+          <tr>
+            <td class="type-meta"><div class="type-lbl">Label / Meta</div><div class="type-spec">11px · 600 · uppercase</div></td>
+            <td><span style="font-size:11px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.06em">Started Apr 10 · 14 days · 847 posts matched</span></td>
+          </tr>
+          <tr>
+            <td class="type-meta"><div class="type-lbl">Micro</div><div class="type-spec">10px · 700 · uppercase</div></td>
+            <td><span style="font-size:10px;font-weight:700;color:var(--g400);text-transform:uppercase;letter-spacing:.08em">Inauthenticity · 72%</span></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-typ-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Hierarchy rules</h2></div>
+      <div class="dd-grid">
+        <div class="dd-card do">
+          <div class="dd-example white" style="flex-direction:column;align-items:flex-start;gap:4px">
+            <div style="font-size:16px;font-weight:700;color:var(--g900)">Narrative Overview</div>
+            <div style="font-size:13px;color:var(--g600)">Showing 12 narratives for Apr 22</div>
+            <div style="font-size:11px;color:var(--g400);text-transform:uppercase;letter-spacing:.06em;font-weight:600">4 flagged · 3 high impact</div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Use 3+ distinct type roles in a section to create clear hierarchy: heading → body → metadata.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example white" style="flex-direction:column;align-items:flex-start;gap:4px">
+            <div style="font-size:13px;font-weight:700;color:var(--g900)">Narrative Overview</div>
+            <div style="font-size:13px;color:var(--g600)">Showing 12 narratives for Apr 22</div>
+            <div style="font-size:13px;color:var(--g400)">4 flagged · 3 high impact</div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't use the same size across heading, body, and metadata — analysts can't scan the content quickly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-typ-specs">
+    <table class="spec-table">
+      <thead><tr><th>Role</th><th>Size</th><th>Weight</th><th>Letter Spacing</th><th>Line Height</th></tr></thead>
+      <tbody>
+        <tr><td>Display</td><td>36px</td><td>900</td><td>-0.6px</td><td>1.1</td></tr>
+        <tr><td>Heading 1</td><td>22px</td><td>800</td><td>-0.3px</td><td>1.2</td></tr>
+        <tr><td>Heading 2</td><td>16px</td><td>700</td><td>0</td><td>1.3</td></tr>
+        <tr><td>Card Title</td><td>13.5px</td><td>700</td><td>0</td><td>1.35</td></tr>
+        <tr><td>Body</td><td>13px</td><td>400</td><td>0</td><td>1.7</td></tr>
+        <tr><td>Label / Meta</td><td>11px</td><td>600</td><td>0.06em</td><td>1.4</td></tr>
+        <tr><td>Micro</td><td>10px</td><td>700</td><td>0.08em</td><td>1.3</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: ELEVATION
+════════════════════════════════════════════ -->
+<section class="page" id="page-elevation">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Foundations</span><span class="sep">›</span><span class="current">Spacing &amp; Elevation</span></div>
+  <div class="page-hero">
+    <h1>Spacing &amp; Elevation</h1>
+    <p>A consistent radius scale and purple-tinted shadow system give Yonder's surfaces their characteristic depth. Shadows use rgba(80,0,120,…) — a warm purple undertone — rather than gray, which ties them to the brand palette.</p>
+  </div>
+
+  <div class="tab-nav" data-group="elevation">
+    <div class="tab-nav-item active" data-tab="elev-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="elev-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-elev-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Border Radius Scale</h2></div>
+      <p class="sec-body">Radius increases with component size. Small elements like chips use 20px (pill). Large panels and modals use 14–16px. All cards use the shared <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">--card-r: 12px</code> token.</p>
+      <div class="preview">
+        <div class="radius-row">
+          <div class="radius-item"><div class="radius-box" style="border-radius:7px"></div><div class="radius-label">7px<br>Small btn</div></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:9px"></div><div class="radius-label">9px<br>Input / btn</div></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:10px"></div><div class="radius-label">10px<br>Nav icon</div></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:12px"></div><div class="radius-label">12px<br>Card (--card-r)</div></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:14px"></div><div class="radius-label">14px<br>Panel / modal</div></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:20px"></div><div class="radius-label">20px<br>Pill / chip</div></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:50%"></div><div class="radius-label">50%<br>Avatar</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Shadow System</h2></div>
+      <p class="sec-body">Three shadow levels are used: default (resting cards), hover (interactive cards on mouse-over), and glow (primary buttons). All use a purple hue for brand cohesion.</p>
+      <div class="preview">
+        <div class="shadow-row">
+          <div class="shadow-item">
+            <div class="shadow-box" style="box-shadow:var(--card-shadow)"></div>
+            <div class="shadow-label"><strong>Default</strong><br>--card-shadow<br>Resting card</div>
+          </div>
+          <div class="shadow-item">
+            <div class="shadow-box" style="box-shadow:var(--card-shadow-hover)"></div>
+            <div class="shadow-label"><strong>Hover</strong><br>--card-shadow-hover<br>Card on hover</div>
+          </div>
+          <div class="shadow-item">
+            <div class="shadow-box" style="box-shadow:0 3px 10px rgba(124,58,237,.3)"></div>
+            <div class="shadow-label"><strong>Button Glow</strong><br>purple rgba<br>Primary button</div>
+          </div>
+          <div class="shadow-item">
+            <div class="shadow-box" style="box-shadow:0 5px 18px rgba(124,58,237,.42)"></div>
+            <div class="shadow-label"><strong>Button Hover</strong><br>purple rgba +<br>translateY(-1px)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">3</div><h2>Layout Dimensions</h2></div>
+      <div class="preview white">
+        <table class="spec-table">
+          <thead><tr><th>Element</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Sidebar width</td><td>72px</td></tr>
+            <tr><td>Top nav height</td><td>52px</td></tr>
+            <tr><td>Card padding</td><td>16px 18px</td></tr>
+            <tr><td>Panel padding</td><td>20px 24px</td></tr>
+            <tr><td>Card gap (stack)</td><td>12px</td></tr>
+            <tr><td>Drawer width</td><td>320px</td></tr>
+            <tr><td>Global transition</td><td>0.18s ease (--e)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-elev-specs">
+    <table class="spec-table">
+      <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td><code>--card-r</code></td><td>12px</td><td>All narrative and faction cards</td></tr>
+        <tr><td><code>--card-shadow</code></td><td>0 1px 3px rgba(80,0,120,.06), 0 4px 16px rgba(80,0,120,.07)</td><td>Resting state for all cards</td></tr>
+        <tr><td><code>--card-shadow-hover</code></td><td>0 4px 8px rgba(80,0,120,.09), 0 8px 28px rgba(80,0,120,.12)</td><td>Hover state — triggered by translateY(-1px)</td></tr>
+        <tr><td><code>--e</code></td><td>0.18s ease</td><td>All hover/transition animations</td></tr>
+        <tr><td><code>--sb-w</code></td><td>72px</td><td>Left sidebar fixed width</td></tr>
+        <tr><td><code>--f</code></td><td>'Heebo', sans-serif</td><td>Global font family</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: GRADIENTS & MOTION
+════════════════════════════════════════════ -->
+<section class="page" id="page-gradients">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Foundations</span><span class="sep">›</span><span class="current">Gradients &amp; Motion</span></div>
+  <div class="page-hero">
+    <h1>Gradients &amp; Motion</h1>
+    <p>Gradients add warmth to the application background and depth to interactive surfaces. Motion is kept minimal — a single easing function at 180ms keeps the interface feeling responsive without being distracting.</p>
+  </div>
+
+  <div class="tab-nav" data-group="gradients">
+    <div class="tab-nav-item active" data-tab="grad-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="grad-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-grad-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Application Background</h2></div>
+      <p class="sec-body">The app background uses a radial gradient that anchors pink (#fce7f3) at the top-left and transitions to lavender (#cdb6ec) at the bottom-right. This gradient is only visible behind the content area — the sidebar and nav bar sit on white.</p>
+      <div class="preview app-bg" style="min-height:160px">
+        <div style="background:rgba(255,255,255,.6);backdrop-filter:blur(8px);border-radius:12px;padding:16px 20px;font-size:13px;color:var(--g700)">Content floats on top of this gradient</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Component Gradients</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div class="swatch"><div class="sw-color" style="background:linear-gradient(135deg,#9f67fa,#6d28d9);height:72px"></div><div class="sw-info"><div class="sw-name">Primary Button</div><div class="sw-hex">135° #9f67fa → #6d28d9</div></div></div>
+        <div class="swatch"><div class="sw-color" style="background:linear-gradient(90deg,#a78bfa,#7c3aed);height:72px"></div><div class="sw-info"><div class="sw-name">Inauthenticity Bar</div><div class="sw-hex">90° #a78bfa → #7c3aed</div></div></div>
+        <div class="swatch"><div class="sw-color" style="background:linear-gradient(135deg,#f87171,#dc2626);height:72px"></div><div class="sw-info"><div class="sw-name">Adversarial Avatar</div><div class="sw-hex">135° #f87171 → #dc2626</div></div></div>
+        <div class="swatch"><div class="sw-color" style="background:linear-gradient(135deg,#fbbf24,#d97706);height:72px"></div><div class="sw-info"><div class="sw-name">Suspicious Avatar</div><div class="sw-hex">135° #fbbf24 → #d97706</div></div></div>
+        <div class="swatch"><div class="sw-color" style="background:linear-gradient(135deg,#86efac,#16a34a);height:72px"></div><div class="sw-info"><div class="sw-name">Aligned Avatar</div><div class="sw-hex">135° #86efac → #16a34a</div></div></div>
+        <div class="swatch"><div class="sw-color" style="background:linear-gradient(135deg,#93c5fd,#2563eb);height:72px"></div><div class="sw-info"><div class="sw-name">Neutral Avatar</div><div class="sw-hex">135° #93c5fd → #2563eb</div></div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">3</div><h2>Motion Principles</h2></div>
+      <div class="use-list">
+        <div class="use-item">
+          <div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+          <div class="use-text"><strong>18ms standard</strong><span>All hover, active, and focus transitions use <code style="font-size:11px;background:var(--pp);color:var(--p);padding:1px 4px;border-radius:3px">--e: .18s ease</code>. This single token ensures the whole UI feels consistently snappy.</span></div>
+        </div>
+        <div class="use-item">
+          <div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="use-text"><strong>translateY(-1px) on hover</strong><span>Cards and primary buttons lift 1px on hover. This micro-motion confirms interactivity without being distracting. Always pair with the hover shadow.</span></div>
+        </div>
+        <div class="use-item">
+          <div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h7"/></svg></div>
+          <div class="use-text"><strong>Drawers slide in from the right</strong><span>Filter and curate drawers use <code style="font-size:11px;background:var(--pp);color:var(--p);padding:1px 4px;border-radius:3px">transform: translateX(100%)</code> when closed, sliding to 0 when opened. Duration: 260ms ease.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-grad-specs">
+    <table class="spec-table">
+      <thead><tr><th>Element</th><th>Gradient</th></tr></thead>
+      <tbody>
+        <tr><td>App background</td><td><code>radial-gradient(ellipse at 20% 20%, #fce7f3 0%, #f0e4ff 35%, #e2d4f5 65%, #cdb6ec 100%)</code></td></tr>
+        <tr><td>Primary button</td><td><code>linear-gradient(135deg, #9f67fa, #6d28d9)</code></td></tr>
+        <tr><td>Inauthenticity bar</td><td><code>linear-gradient(90deg, #a78bfa, #7c3aed)</code></td></tr>
+        <tr><td>Adversarial avatar</td><td><code>linear-gradient(135deg, #f87171, #dc2626)</code></td></tr>
+        <tr><td>Suspicious avatar</td><td><code>linear-gradient(135deg, #fbbf24, #d97706)</code></td></tr>
+        <tr><td>Aligned avatar</td><td><code>linear-gradient(135deg, #86efac, #16a34a)</code></td></tr>
+        <tr><td>Neutral avatar</td><td><code>linear-gradient(135deg, #93c5fd, #2563eb)</code></td></tr>
+        <tr><td>User avatar</td><td><code>linear-gradient(135deg, #a78bfa, #7c3aed)</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: BUTTONS
+════════════════════════════════════════════ -->
+<section class="page" id="page-buttons">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Components</span><span class="sep">›</span><span class="current">Buttons</span></div>
+  <div class="page-hero">
+    <h1>Buttons</h1>
+    <p>Buttons initiate actions. Every button variant communicates a distinct level of emphasis — from the gradient-filled primary for the most critical action to the ghost outline for secondary choices.</p>
+  </div>
+
+  <div class="tab-nav" data-group="buttons">
+    <div class="tab-nav-item active" data-tab="btn-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="btn-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="btn-specs">Specs</div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="tab-panel active" id="tab-btn-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>When to use buttons</h2></div>
+      <div class="use-list">
+        <div class="use-item">
+          <div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+          <div class="use-text"><strong>Primary — one per screen</strong><span>Use for the single most important action: "Sign in", "Apply Filters", "Save Conversation". Its gradient fill commands immediate attention.</span></div>
+        </div>
+        <div class="use-item">
+          <div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div>
+          <div class="use-text"><strong>Outline — secondary actions</strong><span>Paired alongside a primary button for cancel, reset, or go-back actions. The purple border keeps it branded without competing for focus.</span></div>
+        </div>
+        <div class="use-item">
+          <div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
+          <div class="use-text"><strong>Tonal — low-emphasis actions</strong><span>Pale purple background for actions that need to be visible but shouldn't compete with primary CTAs — e.g., "+ Add Narrative" inside a curate drawer.</span></div>
+        </div>
+        <div class="use-item">
+          <div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg></div>
+          <div class="use-text"><strong>Destructive — irreversible actions</strong><span>Red tint for actions like "Delete Faction" or "Clear All Alerts". Always pair with a confirmation dialog before executing.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Variants</h2></div>
+      <div class="preview white">
+        <div class="subsec">
+          <div class="subsec-hd">Filled (Primary)</div>
+          <div class="flex" style="gap:12px">
+            <button class="btn btn-p">Apply Filters</button>
+            <button class="btn btn-p"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v16m8-8H4"/></svg>New Conversation</button>
+            <button class="btn btn-p btn-sm">Save</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="subsec">
+          <div class="subsec-hd">Outline (Secondary)</div>
+          <div class="flex" style="gap:12px">
+            <button class="btn btn-o">Cancel</button>
+            <button class="btn btn-o">Reset Filters</button>
+            <button class="btn btn-o btn-sm">Back</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="subsec">
+          <div class="subsec-hd">Tonal (Low emphasis)</div>
+          <div class="flex" style="gap:12px">
+            <button class="btn btn-tonal">Add Narrative</button>
+            <button class="btn btn-tonal btn-sm">+ Add</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="subsec">
+          <div class="subsec-hd">Destructive</div>
+          <div class="flex" style="gap:12px">
+            <button class="btn btn-danger">Delete Faction</button>
+            <button class="btn btn-danger btn-sm">Remove</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="subsec">
+          <div class="subsec-hd">Disabled</div>
+          <div class="flex" style="gap:12px">
+            <button class="btn btn-d" disabled>Submit</button>
+            <button class="btn btn-d btn-sm" disabled>Save</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="subsec">
+          <div class="subsec-hd">Full Width</div>
+          <div style="max-width:320px"><button class="btn btn-p btn-full">Sign in to Yonder</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">3</div><h2>States</h2></div>
+      <div class="preview white">
+        <div class="subsec-hd">Primary button states</div>
+        <div class="flex">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            <button class="btn btn-p" style="pointer-events:none">Enabled</button>
+            <span style="font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase">Enabled</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            <button class="btn btn-p" style="pointer-events:none;box-shadow:0 5px 18px rgba(124,58,237,.42);transform:translateY(-1px)">Hovered</button>
+            <span style="font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase">Hovered</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            <button class="btn btn-p" style="pointer-events:none;box-shadow:0 0 0 3px rgba(124,58,237,.25)">Focused</button>
+            <span style="font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase">Focused</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            <button class="btn btn-d" style="pointer-events:none;opacity:.5">Disabled</button>
+            <span style="font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase">Disabled</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GUIDELINES -->
+  <div class="tab-panel" id="tab-btn-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Emphasis hierarchy</h2></div>
+      <p class="sec-body">Screens should have at most one primary button. Supporting actions use outline or tonal variants. Stacking two primary buttons removes the hierarchy that makes them effective.</p>
+      <div class="dd-grid">
+        <div class="dd-card do">
+          <div class="dd-example white" style="gap:8px">
+            <button class="btn btn-p">Apply Filters</button>
+            <button class="btn btn-o">Reset</button>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Pair one primary with one outline. The hierarchy is clear — apply is the main action.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example white" style="gap:8px">
+            <button class="btn btn-p">Apply Filters</button>
+            <button class="btn btn-p">Reset</button>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't use two primary buttons side by side — analysts can't tell which action is more important.</p>
+        </div>
+      </div>
+      <div class="dd-grid mt16">
+        <div class="dd-card do">
+          <div class="dd-example white">
+            <button class="btn btn-p btn-sm"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v16m8-8H4"/></svg>New Conversation</button>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Use small size in list headers and drawers where space is constrained.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example white">
+            <button class="btn btn-p" style="font-size:11px;padding:5px 10px">New Conversation</button>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't shrink a default button with inline styles — use <code style="font-size:10px">.btn-sm</code> instead for consistent sizing.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Icon buttons (nav bar)</h2></div>
+      <p class="sec-body">The top nav uses icon-only buttons (<code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">.nbb</code>) for curate, filter, prev/next, and logout. These must always have a <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">title</code> attribute for accessibility. The active state fills with <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">--pl</code> and colours the icon <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">--p</code>.</p>
+    </div>
+  </div>
+
+  <!-- SPECS -->
+  <div class="tab-panel" id="tab-btn-specs">
+    <div class="subsec">
+      <div class="subsec-hd">Anatomy</div>
+      <div class="preview white" style="padding:40px">
+        <div style="position:relative;display:inline-block">
+          <button class="btn btn-p" style="pointer-events:none;font-size:14px;padding:10px 22px">Apply Filters</button>
+          <div class="anatomy-num" style="top:-18px;left:10px">1</div>
+          <div class="anatomy-num" style="top:-18px;left:90px">2</div>
+          <div class="anatomy-num" style="top:50%;transform:translateY(-50%);right:-30px">3</div>
+        </div>
+        <div class="anatomy-legend mt24">
+          <div class="anatomy-legend-row"><div class="anatomy-legend-num">1</div>Container — border-radius 9px, gradient fill</div>
+          <div class="anatomy-legend-row"><div class="anatomy-legend-num">2</div>Label — 13px / 700 / white</div>
+          <div class="anatomy-legend-row"><div class="anatomy-legend-num">3</div>Shadow — 0 3px 10px rgba(124,58,237,.3)</div>
+        </div>
+      </div>
+    </div>
+    <table class="spec-table mt16">
+      <thead><tr><th>Property</th><th>Default</th><th>Small (.btn-sm)</th></tr></thead>
+      <tbody>
+        <tr><td>Height</td><td>36px</td><td>28px</td></tr>
+        <tr><td>Padding</td><td>9px 18px</td><td>6px 12px</td></tr>
+        <tr><td>Font size</td><td>13px</td><td>11px</td></tr>
+        <tr><td>Font weight</td><td>700</td><td>700</td></tr>
+        <tr><td>Border radius</td><td>9px</td><td>7px</td></tr>
+        <tr><td>Icon gap</td><td>6px</td><td>5px</td></tr>
+        <tr><td>Hover transform</td><td>translateY(-1px)</td><td>translateY(-1px)</td></tr>
+        <tr><td>Transition</td><td colspan="2">var(--e) → 0.18s ease</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: BADGES & PILLS
+════════════════════════════════════════════ -->
+<section class="page" id="page-badges">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Components</span><span class="sep">›</span><span class="current">Badges &amp; Pills</span></div>
+  <div class="page-hero">
+    <h1>Badges &amp; Pills</h1>
+    <p>Badges encode categorical state at a glance — impact level, trajectory, flagged status, conversation state, and faction alignment. They are non-interactive and always appear alongside content they describe.</p>
+  </div>
+
+  <div class="tab-nav" data-group="badges">
+    <div class="tab-nav-item active" data-tab="bdg-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="bdg-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="bdg-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-bdg-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Impact Badges</h2></div>
+      <p class="sec-body">Impact badges are the primary information-delivery mechanism on narrative cards. They must appear on every card and directly below the card title. Three levels map to three colors — this mapping must never be changed.</p>
+      <div class="preview white">
+        <div class="flex" style="gap:24px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <span class="imp imp-h">High Impact</span>
+            <div style="text-align:center;font-size:11px;color:var(--g500);line-height:1.5">Red fill<br>#ef4444<br>White text</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <span class="imp imp-m">Moderate Impact</span>
+            <div style="text-align:center;font-size:11px;color:var(--g500);line-height:1.5">Amber fill<br>#d97706<br>White text</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <span class="imp imp-l">Low Impact</span>
+            <div style="text-align:center;font-size:11px;color:var(--g500);line-height:1.5">Blue fill<br>#2563eb<br>White text</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Trajectory Pill</h2></div>
+      <p class="sec-body">The trajectory pill appears alongside an impact badge to indicate whether a narrative's reach is growing or declining. The light blue background (<code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">--traj-bg</code>) deliberately keeps it quieter than the impact badge.</p>
+      <div class="preview white">
+        <div class="flex" style="gap:12px">
+          <span class="traj"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Rising</span>
+          <span class="traj"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Declining</span>
+          <span class="traj"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/></svg>Stable</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">3</div><h2>Flagged Indicator</h2></div>
+      <p class="sec-body">The flagged strip overlaps the left edge of a card container, indicating a narrative that requires immediate analyst attention. It uses absolute positioning — <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">left: -2px; top: 10px</code> — and the card itself gains <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">padding-left: 22px</code> to clear it.</p>
+      <div class="preview app-bg">
+        <div style="position:relative;display:inline-block;padding-left:8px">
+          <div style="position:absolute;left:-2px;top:10px;z-index:2;background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:3px 8px 3px 6px;border-radius:0 10px 10px 0;box-shadow:0 2px 6px rgba(220,38,38,.3);display:flex;align-items:center;gap:4px">
+            <svg width="9" height="9" fill="currentColor" viewBox="0 0 24 24"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>Flagged
+          </div>
+          <div class="nc" style="padding-left:22px;width:280px">
+            <div class="nc-title">McDonalds, TigrayGenocide</div>
+            <div class="nc-badges mt8"><span class="imp imp-h">High Impact</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">4</div><h2>Status &amp; Faction Badges</h2></div>
+      <div class="preview white">
+        <div class="subsec-hd">Conversation Status</div>
+        <div class="flex mb16">
+          <span class="sbadge s-act">Active</span>
+          <span class="sbadge s-arc">Archived</span>
+          <span class="sbadge s-dft">Draft</span>
+        </div>
+        <div class="subsec-hd">Faction Type</div>
+        <div class="flex">
+          <span class="faction-type ft-adv">Adversarial</span>
+          <span class="faction-type ft-susp">Suspicious</span>
+          <span class="faction-type ft-aln">Aligned</span>
+          <span class="faction-type ft-neut">Neutral</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-bdg-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Placement rules</h2></div>
+      <div class="dd-grid">
+        <div class="dd-card do">
+          <div class="dd-example app-bg" style="flex-direction:column;align-items:flex-start;gap:6px;padding:20px">
+            <div style="font-size:13px;font-weight:700;color:var(--g800)">TigrayGenocide narrative</div>
+            <div class="flex"><span class="imp imp-h">High Impact</span><span class="traj"><svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Rising</span></div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Place the impact badge immediately below the card title, with trajectory right beside it on the same row.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example app-bg" style="flex-direction:column;align-items:flex-start;gap:6px;padding:20px">
+            <div class="flex"><span class="imp imp-h">High Impact</span></div>
+            <div style="font-size:13px;font-weight:700;color:var(--g800)">TigrayGenocide narrative</div>
+            <div style="font-size:12px;color:var(--g500)">Tweet preview here…</div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't move the badge above the title. Analysts read the title first, then the impact — reversing this breaks scan flow.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-bdg-specs">
+    <table class="spec-table">
+      <thead><tr><th>Badge</th><th>Background</th><th>Text</th><th>Padding</th><th>Font</th><th>Radius</th></tr></thead>
+      <tbody>
+        <tr><td>High Impact</td><td><code>--red</code> #ef4444</td><td>#fff</td><td>3px 10px</td><td>11px / 700</td><td>20px</td></tr>
+        <tr><td>Moderate Impact</td><td><code>--amber</code> #d97706</td><td>#fff</td><td>3px 10px</td><td>11px / 700</td><td>20px</td></tr>
+        <tr><td>Low Impact</td><td><code>--blue</code> #2563eb</td><td>#fff</td><td>3px 10px</td><td>11px / 700</td><td>20px</td></tr>
+        <tr><td>Trajectory</td><td><code>--traj-bg</code> #eaf4fe</td><td><code>--traj-txt</code> #4a90c4</td><td>3px 10px</td><td>11px / 700</td><td>20px</td></tr>
+        <tr><td>Flagged strip</td><td>#dc2626</td><td>#fff</td><td>3px 8px 3px 6px</td><td>10px / 700</td><td>0 10px 10px 0</td></tr>
+        <tr><td>Active status</td><td><code>--green-bg</code></td><td><code>--green</code></td><td>3px 10px</td><td>11px / 700</td><td>20px</td></tr>
+        <tr><td>Archived status</td><td><code>--g100</code></td><td><code>--g500</code></td><td>3px 10px</td><td>11px / 700</td><td>20px</td></tr>
+        <tr><td>Draft status</td><td><code>--amber-bg</code></td><td><code>--amber</code></td><td>3px 10px</td><td>11px / 700</td><td>20px</td></tr>
+        <tr><td>Adversarial type</td><td>#fee2e2</td><td>#dc2626</td><td>2px 8px</td><td>10px / 700 / uppercase</td><td>20px</td></tr>
+        <tr><td>Suspicious type</td><td><code>--amber-bg</code></td><td>#b45309</td><td>2px 8px</td><td>10px / 700 / uppercase</td><td>20px</td></tr>
+        <tr><td>Aligned type</td><td><code>--green-bg</code></td><td><code>--green</code></td><td>2px 8px</td><td>10px / 700 / uppercase</td><td>20px</td></tr>
+        <tr><td>Neutral type</td><td><code>--g100</code></td><td><code>--g500</code></td><td>2px 8px</td><td>10px / 700 / uppercase</td><td>20px</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: CHIPS
+════════════════════════════════════════════ -->
+<section class="page" id="page-chips">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Components</span><span class="sep">›</span><span class="current">Chips</span></div>
+  <div class="page-hero">
+    <h1>Chips</h1>
+    <p>Filter chips let analysts quickly toggle inclusion criteria in the filter drawer. They behave as multi-select toggles — selecting a chip adds that criterion to the active filter set, deselecting removes it.</p>
+  </div>
+
+  <div class="tab-nav" data-group="chips">
+    <div class="tab-nav-item active" data-tab="chip-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="chip-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="chip-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-chip-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Filter Chips</h2></div>
+      <p class="sec-body">Used in the filter drawer to select platforms, topics, and impact levels. Clicking toggles the <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">.on</code> class. The default on-state fills with primary purple. Impact chips use their semantic color instead.</p>
+      <div class="preview white">
+        <div class="subsec-hd">Platform chips</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">
+          <button class="chip on">Twitter</button>
+          <button class="chip on">Reddit</button>
+          <button class="chip">Facebook</button>
+          <button class="chip">Instagram</button>
+          <button class="chip">TikTok</button>
+          <button class="chip">Telegram</button>
+          <button class="chip">4chan</button>
+        </div>
+        <div class="subsec-hd">Impact chips</div>
+        <div style="display:flex;gap:8px">
+          <button class="chip chip-hi on">HIGH</button>
+          <button class="chip chip-md on">MODERATE</button>
+          <button class="chip chip-lo on">LOW</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>States</h2></div>
+      <div class="preview white">
+        <div class="flex">
+          <div style="text-align:center">
+            <button class="chip" style="pointer-events:none">Default</button>
+            <div style="font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase;margin-top:8px">Off</div>
+          </div>
+          <div style="text-align:center">
+            <button class="chip" style="pointer-events:none;border-color:var(--p);color:var(--p)">Hover</button>
+            <div style="font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase;margin-top:8px">Hovered</div>
+          </div>
+          <div style="text-align:center">
+            <button class="chip on" style="pointer-events:none">Selected</button>
+            <div style="font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase;margin-top:8px">On</div>
+          </div>
+          <div style="text-align:center">
+            <button class="chip chip-hi on" style="pointer-events:none">HIGH</button>
+            <div style="font-size:10px;color:var(--g400);font-weight:600;text-transform:uppercase;margin-top:8px">Impact On</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-chip-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Group by category</h2></div>
+      <div class="dd-grid">
+        <div class="dd-card do">
+          <div class="dd-example white" style="flex-direction:column;align-items:flex-start;gap:10px">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400)">Platforms</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px"><button class="chip on" style="font-size:11px">Twitter</button><button class="chip on" style="font-size:11px">Reddit</button><button class="chip" style="font-size:11px">Facebook</button></div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g400)">Impact</div>
+            <div style="display:flex;gap:6px"><button class="chip chip-hi on" style="font-size:11px">HIGH</button><button class="chip chip-md on" style="font-size:11px">MOD</button></div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Group chips under labelled categories. Analysts immediately know which dimension they're filtering.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example white">
+            <div style="display:flex;flex-wrap:wrap;gap:6px"><button class="chip on" style="font-size:11px">Twitter</button><button class="chip chip-hi on" style="font-size:11px">HIGH</button><button class="chip on" style="font-size:11px">Reddit</button><button class="chip chip-md on" style="font-size:11px">MOD</button></div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't mix chip categories in the same row — it's hard to tell what dimension you're adjusting.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-chip-specs">
+    <table class="spec-table">
+      <thead><tr><th>State</th><th>Background</th><th>Border</th><th>Text Color</th></tr></thead>
+      <tbody>
+        <tr><td>Default</td><td>#fff</td><td>1.5px solid <code>--g200</code></td><td><code>--g600</code></td></tr>
+        <tr><td>Hover</td><td>#fff</td><td>1.5px solid <code>--p</code></td><td><code>--p</code></td></tr>
+        <tr><td>On (selected)</td><td><code>--p</code> #7c3aed</td><td><code>--p</code></td><td>#fff</td></tr>
+        <tr><td>HIGH on</td><td><code>--red</code> #ef4444</td><td><code>--red</code></td><td>#fff</td></tr>
+        <tr><td>MODERATE on</td><td><code>--amber</code> #d97706</td><td><code>--amber</code></td><td>#fff</td></tr>
+        <tr><td>LOW on</td><td><code>--blue</code> #2563eb</td><td><code>--blue</code></td><td>#fff</td></tr>
+      </tbody>
+    </table>
+    <div class="mt16">
+      <table class="spec-table">
+        <thead><tr><th>Property</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Padding</td><td>5px 13px</td></tr>
+          <tr><td>Font size</td><td>12px</td></tr>
+          <tr><td>Font weight</td><td>600</td></tr>
+          <tr><td>Border radius</td><td>20px (pill)</td></tr>
+          <tr><td>Transition</td><td>all var(--e)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: NARRATIVE CARDS
+════════════════════════════════════════════ -->
+<section class="page" id="page-cards">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Components</span><span class="sep">›</span><span class="current">Narrative Cards</span></div>
+  <div class="page-hero">
+    <h1>Narrative Cards</h1>
+    <p>The narrative card is the primary unit of information in Yonder. Every card encodes six dimensions of intelligence simultaneously: title, impact level, trajectory, faction involvement, tweet preview, and inauthenticity score.</p>
+  </div>
+
+  <div class="tab-nav" data-group="cards">
+    <div class="tab-nav-item active" data-tab="card-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="card-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="card-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-card-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Variants</h2></div>
+      <div class="preview app-bg" style="display:flex;flex-direction:column;gap:12px">
+
+        <div class="example-label">Standard card</div>
+        <div class="nc">
+          <div class="nc-top">
+            <div class="nc-title">McDonalds Employees Sharing Pronouns on Badge</div>
+            <div style="display:flex;gap:4px">
+              <button style="border:none;background:none;cursor:pointer;color:var(--g300)"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></button>
+              <button style="border:none;background:none;cursor:pointer;color:var(--g300)"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg></button>
+            </div>
+          </div>
+          <div class="nc-badges"><span class="imp imp-m">Moderate Impact</span></div>
+          <div class="nc-factions"><span class="nc-fac">Populist Left (22%)</span><span style="display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--g200)"></span><span class="nc-fac">Social Action (15%)</span></div>
+          <div class="nc-tweet">McDonalds wanting staff to show their pronouns on a badge for Pride Month (ENGLAND)…</div>
+          <div class="nc-foot">
+            <div style="flex:1"><div class="nc-ina-lbl">Inauthenticity · 28%</div><div class="nc-ina-bar"><div class="nc-ina-fill" style="width:28%"></div></div></div>
+            <span style="font-size:11px;color:var(--g400)">892 posts</span>
+          </div>
+        </div>
+
+        <div class="example-label" style="margin-top:8px">Flagged card (high-urgency variant)</div>
+        <div style="position:relative">
+          <div style="position:absolute;left:-2px;top:10px;z-index:2;background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:3px 8px 3px 6px;border-radius:0 10px 10px 0;box-shadow:0 2px 6px rgba(220,38,38,.3);display:flex;align-items:center;gap:4px">
+            <svg width="9" height="9" fill="currentColor" viewBox="0 0 24 24"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>Flagged
+          </div>
+          <div class="nc" style="padding-left:22px">
+            <div class="nc-top"><div class="nc-title">McDonalds, TigrayGenocide</div></div>
+            <div class="nc-badges"><span class="imp imp-h">High Impact</span><span class="traj"><svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Rising</span></div>
+            <div class="nc-factions"><span class="nc-fac">QAnon (5%)</span><span style="display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--g200)"></span><span class="nc-fac">Fringe Trolls (10%)</span></div>
+            <div class="nc-tweet">We ask @McDonalds to take a stance against the #TigrayGenocide…</div>
+            <div class="nc-foot">
+              <div style="flex:1"><div class="nc-ina-lbl">Inauthenticity · 72%</div><div class="nc-ina-bar"><div class="nc-ina-fill" style="width:72%"></div></div></div>
+              <span style="font-size:11px;color:var(--g400)">4,392 posts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Anatomy</h2></div>
+      <div class="preview white" style="padding:40px 40px 24px">
+        <div style="position:relative;max-width:400px">
+          <div class="nc" style="pointer-events:none">
+            <div class="nc-top"><div class="nc-title">Narrative Title Text Here</div><div style="display:flex;gap:4px;opacity:.3"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div></div>
+            <div class="nc-badges"><span class="imp imp-h">High Impact</span><span class="traj">Rising</span></div>
+            <div class="nc-factions"><span class="nc-fac">Faction A (5%)</span><span style="display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--g200)"></span><span class="nc-fac">Faction B (12%)</span></div>
+            <div class="nc-tweet">Tweet preview text — a representative post from this narrative cluster…</div>
+            <div class="nc-foot">
+              <div style="flex:1"><div class="nc-ina-lbl">Inauthenticity · 60%</div><div class="nc-ina-bar"><div class="nc-ina-fill" style="width:60%"></div></div></div>
+              <span style="font-size:11px;color:var(--g400)">2,100 posts</span>
+            </div>
+          </div>
+          <div class="anatomy-num" style="top:-14px;left:30px">1</div>
+          <div class="anatomy-num" style="top:-14px;right:30px">2</div>
+          <div class="anatomy-num" style="top:52px;left:-14px">3</div>
+          <div class="anatomy-num" style="top:78px;left:-14px">4</div>
+          <div class="anatomy-num" style="top:106px;left:-14px">5</div>
+          <div class="anatomy-num" style="bottom:24px;left:-14px">6</div>
+        </div>
+        <div class="anatomy-legend mt24">
+          <div class="anatomy-legend-row"><div class="anatomy-legend-num">1</div>Card title — 13.5px / 700</div>
+          <div class="anatomy-legend-row"><div class="anatomy-legend-num">2</div>Action icons — activity chart, star/save</div>
+          <div class="anatomy-legend-row"><div class="anatomy-legend-num">3</div>Impact badge + Trajectory pill</div>
+          <div class="anatomy-legend-row"><div class="anatomy-legend-num">4</div>Faction labels — lavender, 11px / 600</div>
+          <div class="anatomy-legend-row"><div class="anatomy-legend-num">5</div>Tweet preview — 12px / 400 / gray-500</div>
+          <div class="anatomy-legend-row"><div class="anatomy-legend-num">6</div>Inauthenticity bar + post count</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-card-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Content completeness</h2></div>
+      <div class="dd-grid">
+        <div class="dd-card do">
+          <div class="dd-example app-bg" style="padding:16px">
+            <div class="nc" style="width:100%;pointer-events:none">
+              <div class="nc-title">TigrayGenocide Narrative</div>
+              <div class="nc-badges mt8"><span class="imp imp-h">High Impact</span><span class="traj">Rising</span></div>
+              <div class="nc-factions" style="margin-top:6px"><span class="nc-fac">QAnon (5%)</span></div>
+              <div class="nc-tweet" style="margin-top:6px">Tweet preview…</div>
+              <div class="nc-foot" style="padding-top:8px"><div style="flex:1"><div class="nc-ina-lbl">Inauthenticity · 72%</div><div class="nc-ina-bar" style="margin-top:3px"><div class="nc-ina-fill" style="width:72%"></div></div></div></div>
+            </div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Always render all six card zones. Every field carries signal — omitting any degrades analyst decision-making.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example app-bg" style="padding:16px">
+            <div class="nc" style="width:100%;pointer-events:none">
+              <div class="nc-title">TigrayGenocide Narrative</div>
+              <div class="nc-badges mt8"><span class="imp imp-h">High Impact</span></div>
+            </div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't truncate cards to just title + badge. Faction labels and inauthenticity data are critical context.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-card-specs">
+    <table class="spec-table">
+      <thead><tr><th>Property</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Background</td><td>#fff</td></tr>
+        <tr><td>Border radius</td><td><code>--card-r</code> 12px</td></tr>
+        <tr><td>Padding</td><td>16px 18px</td></tr>
+        <tr><td>Border</td><td>1px solid rgba(220,200,245,.25)</td></tr>
+        <tr><td>Shadow (rest)</td><td><code>--card-shadow</code></td></tr>
+        <tr><td>Shadow (hover)</td><td><code>--card-shadow-hover</code></td></tr>
+        <tr><td>Hover transform</td><td>translateY(-1px)</td></tr>
+        <tr><td>Flagged padding-left</td><td>22px (clears the 10px strip)</td></tr>
+        <tr><td>Strip left offset</td><td>-2px (bleeds past card edge)</td></tr>
+        <tr><td>Strip top offset</td><td>10px</td></tr>
+        <tr><td>Inauthenticity bar height</td><td>4px</td></tr>
+        <tr><td>Inauthenticity bar gradient</td><td>linear-gradient(90deg, #a78bfa, #7c3aed)</td></tr>
+        <tr><td>Gap between cards</td><td>12px</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: FACTION AVATARS
+════════════════════════════════════════════ -->
+<section class="page" id="page-avatars">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Components</span><span class="sep">›</span><span class="current">Faction Avatars</span></div>
+  <div class="page-hero">
+    <h1>Faction Avatars</h1>
+    <p>Faction avatars are 38px rounded squares that identify groups by their alignment category. The gradient fill communicates trust level immediately — red for adversarial threats, amber for suspicious, green for aligned, blue for neutral.</p>
+  </div>
+
+  <div class="tab-nav" data-group="avatars">
+    <div class="tab-nav-item active" data-tab="av-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="av-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="av-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-av-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Alignment Types</h2></div>
+      <p class="sec-body">Each of the four faction alignment categories maps to a distinct gradient. These colors are also used in the faction type badges and faction list rows, creating a consistent language across all faction-related views.</p>
+      <div class="preview white">
+        <div class="flex" style="gap:28px;align-items:flex-start">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div class="fav fav-adv" style="width:52px;height:52px;border-radius:13px;font-size:14px">QA</div>
+            <span class="faction-type ft-adv">Adversarial</span>
+            <span style="font-size:11px;color:var(--g400);text-align:center">#f87171 → #dc2626</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div class="fav fav-susp" style="width:52px;height:52px;border-radius:13px;font-size:14px">FT</div>
+            <span class="faction-type ft-susp">Suspicious</span>
+            <span style="font-size:11px;color:var(--g400);text-align:center">#fbbf24 → #d97706</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div class="fav fav-aln" style="width:52px;height:52px;border-radius:13px;font-size:14px">PL</div>
+            <span class="faction-type ft-aln">Aligned</span>
+            <span style="font-size:11px;color:var(--g400);text-align:center">#86efac → #16a34a</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div class="fav fav-neut" style="width:52px;height:52px;border-radius:13px;font-size:14px">FR</div>
+            <span class="faction-type ft-neut">Neutral</span>
+            <span style="font-size:11px;color:var(--g400);text-align:center">#93c5fd → #2563eb</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff">JD</div>
+            <span class="faction-type ft-neut" style="background:var(--pp);color:var(--p)">User</span>
+            <span style="font-size:11px;color:var(--g400);text-align:center">#a78bfa → #7c3aed<br>circle</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>In context — Faction list row</h2></div>
+      <div class="preview white" style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px">
+          <div class="fav fav-adv">QA</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:700;color:var(--g800)">QAnon</div>
+            <div style="font-size:11px;color:var(--g400)">Far-right conspiracy theorists</div>
+            <div style="height:4px;background:var(--g100);border-radius:2px;margin-top:5px;overflow:hidden"><div style="height:100%;width:72%;background:var(--red);border-radius:2px"></div></div>
+          </div>
+          <span class="faction-type ft-adv">Adversarial</span>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color:var(--g300)" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--g200);border-radius:10px">
+          <div class="fav fav-aln">PL</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:700;color:var(--g800)">Populist Left</div>
+            <div style="font-size:11px;color:var(--g400)">Progressive activist community</div>
+            <div style="height:4px;background:var(--g100);border-radius:2px;margin-top:5px;overflow:hidden"><div style="height:100%;width:44%;background:var(--green);border-radius:2px"></div></div>
+          </div>
+          <span class="faction-type ft-aln">Aligned</span>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color:var(--g300)" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-av-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Initials</h2></div>
+      <div class="dd-grid">
+        <div class="dd-card do">
+          <div class="dd-example white" style="gap:10px">
+            <div class="fav fav-adv">QA</div>
+            <div class="fav fav-susp">FT</div>
+            <div class="fav fav-neut" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);border-radius:50%">JD</div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Use 2-character initials: first letters of the faction/user name. "QA" for QAnon, "FT" for Fringe Trolls.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example white" style="gap:10px">
+            <div class="fav fav-adv" style="font-size:9px">QAn</div>
+            <div class="fav fav-susp" style="font-size:8px">Frin</div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't use 3+ characters — the avatar becomes illegible at small sizes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-av-specs">
+    <table class="spec-table">
+      <thead><tr><th>Property</th><th>Faction Avatar</th><th>User Avatar</th></tr></thead>
+      <tbody>
+        <tr><td>Size</td><td>38 × 38px</td><td>32 × 32px (sidebar)</td></tr>
+        <tr><td>Border radius</td><td>10px (rounded square)</td><td>50% (circle)</td></tr>
+        <tr><td>Font</td><td>12px / 800 / white</td><td>13px / 800 / white</td></tr>
+        <tr><td>Adversarial gradient</td><td colspan="2">linear-gradient(135deg, #f87171, #dc2626)</td></tr>
+        <tr><td>Suspicious gradient</td><td colspan="2">linear-gradient(135deg, #fbbf24, #d97706)</td></tr>
+        <tr><td>Aligned gradient</td><td colspan="2">linear-gradient(135deg, #86efac, #16a34a)</td></tr>
+        <tr><td>Neutral gradient</td><td colspan="2">linear-gradient(135deg, #93c5fd, #2563eb)</td></tr>
+        <tr><td>User gradient</td><td>—</td><td>linear-gradient(135deg, #a78bfa, #7c3aed)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: TABS
+════════════════════════════════════════════ -->
+<section class="page" id="page-tabs">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Components</span><span class="sep">›</span><span class="current">Tabs</span></div>
+  <div class="page-hero">
+    <h1>Tabs</h1>
+    <p>Tabs organise narrative detail content into four analytical views. They appear as a pill group in a gray tray, with the active tab lifted to a white surface to signal selection.</p>
+  </div>
+
+  <div class="tab-nav" data-group="tabs-page">
+    <div class="tab-nav-item active" data-tab="tabs-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="tabs-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="tabs-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-tabs-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Narrative detail tabs</h2></div>
+      <p class="sec-body">The four tabs in narrative detail each answer a distinct analyst question. This order is fixed — analysts develop muscle memory for which tab answers which question.</p>
+      <div class="preview white">
+        <div id="demo-tabs" style="display:flex;gap:4px;background:var(--g100);border-radius:12px;padding:4px;margin-bottom:16px">
+          <button onclick="demoTab(this,'who')" class="dtab on" style="flex:1;border:none;border-radius:9px;padding:8px 6px;font-family:var(--f);font-size:11px;font-weight:600;cursor:pointer;background:#fff;color:var(--p);box-shadow:0 1px 4px rgba(80,0,120,.1);transition:all .18s">Who is Involved?</button>
+          <button onclick="demoTab(this,'care')" class="dtab" style="flex:1;border:none;border-radius:9px;padding:8px 6px;font-family:var(--f);font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--g500);transition:all .18s">Should I care?</button>
+          <button onclick="demoTab(this,'why')" class="dtab" style="flex:1;border:none;border-radius:9px;padding:8px 6px;font-family:var(--f);font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--g500);transition:all .18s">Why is happening?</button>
+          <button onclick="demoTab(this,'what')" class="dtab" style="flex:1;border:none;border-radius:9px;padding:8px 6px;font-family:var(--f);font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--g500);transition:all .18s">What can I do?</button>
+        </div>
+        <div id="demo-panel-who" style="background:var(--g50);border-radius:10px;padding:16px;font-size:13px;color:var(--g600)">
+          <strong style="color:var(--g800)">Who is Involved?</strong><br>Shows a stacked area chart of faction engagement over time. Identifies which groups are amplifying the narrative and at what relative proportion.
+        </div>
+        <div id="demo-panel-care" style="background:var(--g50);border-radius:10px;padding:16px;font-size:13px;color:var(--g600);display:none">
+          <strong style="color:var(--g800)">Should I care?</strong><br>Displays an impact spectrum bar and per-faction inauthenticity scores. Helps the analyst quickly decide whether a narrative warrants escalation.
+        </div>
+        <div id="demo-panel-why" style="background:var(--g50);border-radius:10px;padding:16px;font-size:13px;color:var(--g600);display:none">
+          <strong style="color:var(--g800)">Why is happening?</strong><br>Line chart of narrative volume over time with annotated inflection points. Surfaced AI analysis explains probable trigger events.
+        </div>
+        <div id="demo-panel-what" style="background:var(--g50);border-radius:10px;padding:16px;font-size:13px;color:var(--g600);display:none">
+          <strong style="color:var(--g800)">What can I do?</strong><br>Recommended response actions with priority indicators — monitor, respond, escalate. Links to relevant team workflows.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-tabs-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Tab ordering</h2></div>
+      <div class="callout">
+        <strong>Fixed order is required.</strong> The four narrative tabs must always appear in the sequence: <em>Who → Care → Why → What</em>. This mirrors the analyst's cognitive workflow: identify actors → assess risk → understand cause → choose response. Reordering breaks the mental model analysts have built.
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>First tab always active</h2></div>
+      <div class="dd-grid">
+        <div class="dd-card do">
+          <div class="dd-example white">
+            <div style="display:flex;gap:3px;background:var(--g100);border-radius:10px;padding:3px;width:100%">
+              <button style="flex:1;border:none;border-radius:7px;padding:7px 4px;background:#fff;color:var(--p);font-family:var(--f);font-size:10px;font-weight:700;box-shadow:0 1px 3px rgba(80,0,120,.1)">Who?</button>
+              <button style="flex:1;border:none;border-radius:7px;padding:7px 4px;background:transparent;color:var(--g500);font-family:var(--f);font-size:10px;font-weight:600">Care?</button>
+              <button style="flex:1;border:none;border-radius:7px;padding:7px 4px;background:transparent;color:var(--g500);font-family:var(--f);font-size:10px;font-weight:600">Why?</button>
+            </div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Always open the narrative detail view with the first tab ("Who is Involved?") active.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example white">
+            <div style="display:flex;gap:3px;background:var(--g100);border-radius:10px;padding:3px;width:100%">
+              <button style="flex:1;border:none;border-radius:7px;padding:7px 4px;background:transparent;color:var(--g500);font-family:var(--f);font-size:10px;font-weight:600">Who?</button>
+              <button style="flex:1;border:none;border-radius:7px;padding:7px 4px;background:transparent;color:var(--g500);font-family:var(--f);font-size:10px;font-weight:600">Care?</button>
+              <button style="flex:1;border:none;border-radius:7px;padding:7px 4px;background:#fff;color:var(--p);font-family:var(--f);font-size:10px;font-weight:700;box-shadow:0 1px 3px rgba(80,0,120,.1)">Why?</button>
+            </div>
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't persist the last-active tab across navigation — always reset to "Who is Involved?" on entry.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-tabs-specs">
+    <table class="spec-table">
+      <thead><tr><th>Property</th><th>Tab tray</th><th>Tab button (off)</th><th>Tab button (on)</th></tr></thead>
+      <tbody>
+        <tr><td>Background</td><td><code>--g100</code></td><td>transparent</td><td>#fff</td></tr>
+        <tr><td>Border radius</td><td>12px</td><td>9px</td><td>9px</td></tr>
+        <tr><td>Padding</td><td>4px</td><td>8px 12px</td><td>8px 12px</td></tr>
+        <tr><td>Font</td><td>—</td><td>12px / 600</td><td>12px / 600</td></tr>
+        <tr><td>Text color</td><td>—</td><td><code>--g500</code></td><td><code>--p</code></td></tr>
+        <tr><td>Shadow (on)</td><td>—</td><td>none</td><td>0 1px 4px rgba(80,0,120,.1)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: NAVIGATION
+════════════════════════════════════════════ -->
+<section class="page" id="page-navigation">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Components</span><span class="sep">›</span><span class="current">Navigation</span></div>
+  <div class="page-hero">
+    <h1>Navigation</h1>
+    <p>Yonder uses two navigation layers: a 72px fixed sidebar for section-level routing, and a top nav bar for contextual actions (curate, filter, date, feedback). Both share the same white surface and sit outside the gradient content area.</p>
+  </div>
+
+  <div class="tab-nav" data-group="nav-page">
+    <div class="tab-nav-item active" data-tab="nav-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="nav-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="nav-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-nav-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Sidebar Navigation</h2></div>
+      <p class="sec-body">Five primary sections are accessible from the sidebar. Each item shows a 18px icon in a 34×34px container and a 9.5px label below. The active item fills the icon container with <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">--pl</code> and colours everything <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">--p</code>. The alerts item shows a red dot when unread alerts exist.</p>
+      <div class="preview white" style="display:flex;gap:32px;align-items:flex-start">
+        <div class="sbn-demo-wrap">
+          <button class="sbn-item on">
+            <div class="sbn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+            <span class="sbn-lbl">Home</span>
+          </button>
+          <button class="sbn-item">
+            <div class="sbn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <span class="sbn-lbl">Convos</span>
+          </button>
+          <button class="sbn-item" style="position:relative">
+            <div style="position:absolute;top:4px;right:10px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid #fff"></div>
+            <div class="sbn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+            <span class="sbn-lbl">Alerts</span>
+          </button>
+          <button class="sbn-item">
+            <div class="sbn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <span class="sbn-lbl">Factions</span>
+          </button>
+        </div>
+        <div style="font-size:13px;color:var(--g600);line-height:1.8">
+          <p><strong>Width:</strong> 72px (fixed)</p>
+          <p><strong>Icon size:</strong> 18×18px, stroke-width: 2</p>
+          <p><strong>Icon container:</strong> 34×34px, radius 10px</p>
+          <p><strong>Active bg:</strong> <code style="font-size:11px;background:var(--pp);color:var(--p);padding:1px 4px;border-radius:3px">--pl</code></p>
+          <p><strong>Active color:</strong> <code style="font-size:11px;background:var(--pp);color:var(--p);padding:1px 4px;border-radius:3px">--p</code></p>
+          <p><strong>Label:</strong> 9.5px / 600</p>
+          <p><strong>Alert dot:</strong> 7px, red, white border 1.5px</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Top Nav Bar</h2></div>
+      <p class="sec-body">The top nav bar provides contextual actions for the current view. From left to right: brand mark, client selector, spacer, daily digest button, curate toggle, filter toggle (with active-filter count badge), prev/next digest nav, submit feedback, logout.</p>
+      <div class="preview" style="padding:12px 16px;display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--g200);border-radius:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:7px;padding-right:14px;border-right:1px solid var(--g200)">
+          <svg viewBox="0 0 22 22" fill="none" width="18" height="18"><line x1="11" y1="2" x2="11" y2="20" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/><line x1="2" y1="11" x2="20" y2="11" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/><line x1="4.64" y1="4.64" x2="17.36" y2="17.36" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/><line x1="17.36" y1="4.64" x2="4.64" y2="17.36" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span style="font-size:13px;font-weight:800">× yonder</span>
+        </div>
+        <button style="display:flex;align-items:center;gap:7px;border:1.5px solid var(--g200);background:#fff;border-radius:8px;padding:5px 10px;cursor:pointer;font-family:var(--f);font-size:12px;font-weight:600;color:var(--g700)">
+          <svg viewBox="0 0 22 16" fill="#ffbc0d" width="18" height="13"><path d="M1 15V2.5C1 1.7 1.7 1 2.5 1S4 1.7 4 2.5V9L11 1.5 18 9V2.5C18 1.7 18.7 1 19.5 1S21 1.7 21 2.5V15H18V11L11 5 4 11V15H1Z"/></svg>
+          McDonald's
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="12" stroke-width="2.5" stroke-linecap="round"><path d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div style="flex:1"></div>
+        <button style="display:flex;align-items:center;gap:6px;border:1.5px solid var(--g200);background:#fff;border-radius:8px;padding:5px 10px;cursor:pointer;font-family:var(--f);font-size:12px;font-weight:600;color:var(--g700)">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="13" height="13" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Daily Digest Apr 22
+        </button>
+        <button style="width:32px;height:32px;border:none;background:var(--pl);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--p)">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" height="15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </button>
+        <div style="position:relative">
+          <button style="width:32px;height:32px;border:none;background:var(--g100);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--g500)">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" height="15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          </button>
+          <div style="position:absolute;top:-5px;right:-5px;width:16px;height:16px;background:var(--p);border-radius:50%;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;border:2px solid #fff">6</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-nav-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Active state rules</h2></div>
+      <div class="callout">
+        <strong>Only one sidebar item is active at a time.</strong> Navigating to a sub-view (e.g., narrative detail from Home) does not change the active sidebar item — the parent section (Home) remains active. Active state changes only when the analyst explicitly clicks a new sidebar section.
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-nav-specs">
+    <table class="spec-table">
+      <thead><tr><th>Element</th><th>Property</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Sidebar</td><td>Width</td><td>72px</td></tr>
+        <tr><td>Sidebar</td><td>Background</td><td>#fff</td></tr>
+        <tr><td>Nav item (active)</td><td>Icon bg</td><td><code>--pl</code> #ede9fe</td></tr>
+        <tr><td>Nav item (active)</td><td>Color</td><td><code>--p</code> #7c3aed</td></tr>
+        <tr><td>Nav item (inactive)</td><td>Color</td><td><code>--g400</code></td></tr>
+        <tr><td>Alert dot</td><td>Size</td><td>7px diameter</td></tr>
+        <tr><td>Alert dot</td><td>Color</td><td><code>--red</code></td></tr>
+        <tr><td>Alert dot</td><td>Border</td><td>1.5px solid #fff</td></tr>
+        <tr><td>Top nav</td><td>Height</td><td>52px</td></tr>
+        <tr><td>Filter badge</td><td>Size</td><td>16px, border-radius 50%</td></tr>
+        <tr><td>Filter badge</td><td>Background</td><td><code>--p</code></td></tr>
+        <tr><td>Filter badge</td><td>Font</td><td>9px / 800 / white</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: FORM CONTROLS
+════════════════════════════════════════════ -->
+<section class="page" id="page-forms">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Components</span><span class="sep">›</span><span class="current">Form Controls</span></div>
+  <div class="page-hero">
+    <h1>Form Controls</h1>
+    <p>Text inputs, selects, and textareas appear in the login screen, create conversation flow, and create faction wizard. All share the same border, radius, focus ring, and font — the only variation is state (default, focused, error, success).</p>
+  </div>
+
+  <div class="tab-nav" data-group="forms-page">
+    <div class="tab-nav-item active" data-tab="form-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="form-guidelines">Guidelines</div>
+    <div class="tab-nav-item" data-tab="form-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-form-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Input States</h2></div>
+      <div class="preview white" style="max-width:420px">
+        <div class="fg">
+          <label>Default</label>
+          <input type="text" placeholder="Enter conversation name" style="pointer-events:none">
+        </div>
+        <div class="fg">
+          <label>Focused</label>
+          <input type="text" value="Boycott tracking Q2" style="border-color:var(--p);box-shadow:0 0 0 3px rgba(124,58,237,.12);pointer-events:none">
+        </div>
+        <div class="fg">
+          <label>Error</label>
+          <input type="text" value="bad@" class="error" style="pointer-events:none">
+          <span class="fg-err">Please enter a valid email address</span>
+        </div>
+        <div class="fg">
+          <label>Success</label>
+          <input type="text" value="analyst@mcdonalds.com" class="success" style="pointer-events:none">
+          <span style="font-size:11px;color:var(--green);margin-top:2px">Email verified ✓</span>
+        </div>
+        <div class="fg">
+          <label>Disabled</label>
+          <input type="text" value="Read-only value" disabled style="background:var(--g50);color:var(--g400);cursor:not-allowed">
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Types</h2></div>
+      <div class="preview white" style="max-width:420px">
+        <div class="fg">
+          <label>Text input</label>
+          <input type="text" placeholder="Conversation name">
+        </div>
+        <div class="fg">
+          <label>Password</label>
+          <input type="password" value="password">
+        </div>
+        <div class="fg">
+          <label>Select</label>
+          <select><option>Twitter</option><option>Reddit</option><option>Facebook</option></select>
+        </div>
+        <div class="fg">
+          <label>Textarea</label>
+          <textarea placeholder="Add context, notes, or instructions for this conversation…"></textarea>
+          <span class="fg-hint">Max 500 characters</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-form-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Labels always above</h2></div>
+      <div class="dd-grid">
+        <div class="dd-card do">
+          <div class="dd-example white" style="flex-direction:column;align-items:flex-start;gap:4px;width:100%">
+            <label style="font-size:11px;font-weight:700;color:var(--g700)">Conversation name</label>
+            <input type="text" placeholder="e.g. Boycott Q2" style="border:1.5px solid var(--g200);border-radius:8px;padding:8px 12px;width:100%;font-family:var(--f);font-size:13px">
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#15803d" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Do</div>
+          <p class="dd-caption">Always place labels above inputs — never inside as placeholder-only text.</p>
+        </div>
+        <div class="dd-card dont">
+          <div class="dd-example white" style="width:100%">
+            <input type="text" placeholder="Conversation name" style="border:1.5px solid var(--g200);border-radius:8px;padding:8px 12px;width:100%;font-family:var(--f);font-size:13px">
+          </div>
+          <div class="dd-label"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Don't</div>
+          <p class="dd-caption">Don't rely on placeholder text as the label — it disappears on input and fails accessibility.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-form-specs">
+    <table class="spec-table">
+      <thead><tr><th>Property</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Border</td><td>1.5px solid <code>--g200</code></td></tr>
+        <tr><td>Border radius</td><td>9px</td></tr>
+        <tr><td>Padding</td><td>9px 13px</td></tr>
+        <tr><td>Font</td><td>13px / 400 / var(--f)</td></tr>
+        <tr><td>Focus border</td><td><code>--p</code> #7c3aed</td></tr>
+        <tr><td>Focus ring</td><td>0 0 0 3px rgba(124,58,237,.12)</td></tr>
+        <tr><td>Error border</td><td><code>--red</code> #ef4444</td></tr>
+        <tr><td>Success border</td><td><code>--green</code> #16a34a</td></tr>
+        <tr><td>Label font</td><td>12px / 700 / <code>--g700</code></td></tr>
+        <tr><td>Hint/error font</td><td>11px / 400 / <code>--g400</code> or <code>--red</code></td></tr>
+        <tr><td>Label-to-input gap</td><td>5px</td></tr>
+        <tr><td>Field gap</td><td>14px (margin-bottom)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: CHARTS
+════════════════════════════════════════════ -->
+<section class="page" id="page-charts">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Components</span><span class="sep">›</span><span class="current">Charts</span></div>
+  <div class="page-hero">
+    <h1>Charts</h1>
+    <p>Three SVG chart types are used across the four narrative detail tabs. All charts use inline SVG with CSS gradients — no third-party libraries. They adapt to container width via <code style="font-size:13px;background:var(--pp);color:var(--p);padding:2px 6px;border-radius:4px">preserveAspectRatio="none"</code>.</p>
+  </div>
+
+  <div class="tab-nav" data-group="charts-page">
+    <div class="tab-nav-item active" data-tab="chart-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="chart-specs">Specs</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-chart-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Stacked Area — Faction Engagement</h2></div>
+      <p class="sec-body">Used in the "Who is Involved?" tab. Three filled areas stacked vertically represent QAnon (indigo), Fringe Trolls (pink), and Antifa (amber). Each fill uses a vertical gradient from 70% opacity at the top to 10% at the baseline.</p>
+      <div class="chart-wrap">
+        <svg width="100%" height="180" viewBox="0 0 600 180" preserveAspectRatio="none" style="display:block">
+          <defs>
+            <linearGradient id="gQA2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#818cf8" stop-opacity=".7"/><stop offset="100%" stop-color="#818cf8" stop-opacity=".1"/></linearGradient>
+            <linearGradient id="gFT2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f472b6" stop-opacity=".7"/><stop offset="100%" stop-color="#f472b6" stop-opacity=".1"/></linearGradient>
+            <linearGradient id="gAT2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fbbf24" stop-opacity=".7"/><stop offset="100%" stop-color="#fbbf24" stop-opacity=".1"/></linearGradient>
+          </defs>
+          <path d="M0 160 C60 155 120 150 180 145 C240 140 300 135 360 142 C420 150 480 148 600 155 L600 180 L0 180 Z" fill="url(#gAT2)"/>
+          <path d="M0 130 C60 120 120 110 180 105 C240 100 300 95 360 105 C420 115 480 112 600 120 L600 155 C480 148 420 150 360 142 C300 135 240 140 180 145 C120 150 60 155 0 160 Z" fill="url(#gFT2)"/>
+          <path d="M0 80 C60 65 120 55 180 50 C240 45 300 40 360 52 C420 65 480 62 600 70 L600 120 C480 112 420 115 360 105 C300 95 240 100 180 105 C120 110 60 120 0 130 Z" fill="url(#gQA2)"/>
+          <line x1="0" y1="175" x2="600" y2="175" stroke="#e5e7eb" stroke-width="1"/>
+        </svg>
+        <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--g600)"><span style="width:12px;height:12px;border-radius:3px;background:#818cf8;display:inline-block"></span>QAnon</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--g600)"><span style="width:12px;height:12px;border-radius:3px;background:#f472b6;display:inline-block"></span>Fringe Trolls</span>
+          <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--g600)"><span style="width:12px;height:12px;border-radius:3px;background:#fbbf24;display:inline-block"></span>Antifa</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">2</div><h2>Horizontal Bar — Inauthenticity</h2></div>
+      <p class="sec-body">Used in the "Should I care?" tab. One bar per faction, ordered by score descending. Fill uses the purple gradient <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">linear-gradient(90deg, #a78bfa, #7c3aed)</code>. Track is <code style="font-size:11px;background:var(--pp);color:var(--p);padding:2px 5px;border-radius:4px">--g100</code>.</p>
+      <div class="chart-wrap" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;color:var(--g500);width:100px;flex-shrink:0">QAnon</span>
+          <div style="flex:1;height:10px;background:var(--g100);border-radius:5px;overflow:hidden"><div style="height:100%;width:82%;background:linear-gradient(90deg,#a78bfa,#7c3aed);border-radius:5px"></div></div>
+          <span style="font-size:11px;color:var(--g500);width:34px;text-align:right">82%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;color:var(--g500);width:100px;flex-shrink:0">Fringe Trolls</span>
+          <div style="flex:1;height:10px;background:var(--g100);border-radius:5px;overflow:hidden"><div style="height:100%;width:68%;background:linear-gradient(90deg,#a78bfa,#7c3aed);border-radius:5px"></div></div>
+          <span style="font-size:11px;color:var(--g500);width:34px;text-align:right">68%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;color:var(--g500);width:100px;flex-shrink:0">Antifa</span>
+          <div style="flex:1;height:10px;background:var(--g100);border-radius:5px;overflow:hidden"><div style="height:100%;width:41%;background:linear-gradient(90deg,#a78bfa,#7c3aed);border-radius:5px"></div></div>
+          <span style="font-size:11px;color:var(--g500);width:34px;text-align:right">41%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;color:var(--g500);width:100px;flex-shrink:0">Populist Left</span>
+          <div style="flex:1;height:10px;background:var(--g100);border-radius:5px;overflow:hidden"><div style="height:100%;width:22%;background:linear-gradient(90deg,#a78bfa,#7c3aed);border-radius:5px"></div></div>
+          <span style="font-size:11px;color:var(--g500);width:34px;text-align:right">22%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">3</div><h2>Line + Area — Volume Over Time</h2></div>
+      <p class="sec-body">Used in the "Why is happening?" tab. A single purple line with a gradient fill below shows narrative volume over the selected date range. A circle at a key inflection point anchors the tooltip indicator.</p>
+      <div class="chart-wrap">
+        <svg width="100%" height="140" viewBox="0 0 600 140" preserveAspectRatio="none" style="display:block">
+          <defs><linearGradient id="gLine2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7c3aed" stop-opacity=".3"/><stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0 110 C50 100 100 90 150 70 C200 50 250 40 300 45 C350 50 400 65 450 55 C500 45 550 35 600 30 L600 140 L0 140 Z" fill="url(#gLine2)"/>
+          <path d="M0 110 C50 100 100 90 150 70 C200 50 250 40 300 45 C350 50 400 65 450 55 C500 45 550 35 600 30" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="300" cy="45" r="5" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/>
+          <line x1="0" y1="135" x2="600" y2="135" stroke="#e5e7eb" stroke-width="1"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-chart-specs">
+    <table class="spec-table">
+      <thead><tr><th>Chart</th><th>Property</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>All charts</td><td>Element</td><td>Inline SVG</td></tr>
+        <tr><td>All charts</td><td>preserveAspectRatio</td><td>none (fluid width)</td></tr>
+        <tr><td>Stacked area</td><td>Height</td><td>180px viewBox</td></tr>
+        <tr><td>Stacked area</td><td>QAnon color</td><td>#818cf8 (indigo-400)</td></tr>
+        <tr><td>Stacked area</td><td>Fringe color</td><td>#f472b6 (pink-400)</td></tr>
+        <tr><td>Stacked area</td><td>Antifa color</td><td>#fbbf24 (amber-400)</td></tr>
+        <tr><td>Bar chart</td><td>Bar height</td><td>10px</td></tr>
+        <tr><td>Bar chart</td><td>Track color</td><td><code>--g100</code></td></tr>
+        <tr><td>Bar chart</td><td>Fill gradient</td><td>linear-gradient(90deg, #a78bfa, #7c3aed)</td></tr>
+        <tr><td>Bar chart</td><td>Bar radius</td><td>5px</td></tr>
+        <tr><td>Line chart</td><td>Stroke color</td><td><code>--p</code> #7c3aed</td></tr>
+        <tr><td>Line chart</td><td>Stroke width</td><td>2.5px</td></tr>
+        <tr><td>Line chart</td><td>Fill gradient</td><td>linear-gradient(y, rgba(124,58,237,.3) → 0)</td></tr>
+        <tr><td>Line chart</td><td>Data point</td><td>r=5, white fill, stroke #7c3aed 2.5px</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: ICONS
+════════════════════════════════════════════ -->
+<section class="page" id="page-icons">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Patterns</span><span class="sep">›</span><span class="current">Icons</span></div>
+  <div class="page-hero">
+    <h1>Icons</h1>
+    <p>All 22 icons are hand-crafted inline SVGs with a 24×24 viewBox. They use stroke-based rendering (no fill) at stroke-width: 2, with round linecaps and linejoin. Rendered at 18–22px in most contexts. No icon library is required.</p>
+  </div>
+
+  <div class="tab-nav" data-group="icons-page">
+    <div class="tab-nav-item active" data-tab="icon-overview">Overview</div>
+    <div class="tab-nav-item" data-tab="icon-guidelines">Guidelines</div>
+  </div>
+
+  <div class="tab-panel active" id="tab-icon-overview">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Icon Set</h2></div>
+      <div class="preview white">
+        <div class="icon-grid">
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Home</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Reports</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Convos</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><span>Content</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span>Alerts</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span>Factions</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg><span>Filter</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg><span>Curate</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18"/></svg><span>Calendar</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span>Activity</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke-linecap="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg><span>Star</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 19l-7-7 7-7"/></svg><span>Back / Prev</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg><span>Next / Fwd</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18L18 6M6 6l12 12"/></svg><span>Close</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span>Search</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>Add</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg><span>Log out</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Settings</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9l-7 7-7-7"/></svg><span>Chevron Down</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span>Arrow Right</span></div>
+          <div class="icon-tile" style="background:var(--g900)"><svg viewBox="0 0 28 28" fill="none" width="22" height="22"><line x1="14" y1="2" x2="14" y2="26" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/><line x1="2" y1="14" x2="26" y2="14" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/><line x1="5.17" y1="5.17" x2="22.83" y2="22.83" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/><line x1="22.83" y1="5.17" x2="5.17" y2="22.83" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/></svg><span style="color:var(--g500)">× yonder mark</span></div>
+          <div class="icon-tile"><svg viewBox="0 0 22 16" fill="#ffbc0d" width="26" height="19"><path d="M1 15V2.5C1 1.7 1.7 1 2.5 1S4 1.7 4 2.5V9L11 1.5 18 9V2.5C18 1.7 18.7 1 19.5 1S21 1.7 21 2.5V15H18V11L11 5 4 11V15H1Z"/></svg><span>McDonald's</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-icon-guidelines">
+    <div class="sec">
+      <div class="sec-hd"><div class="sec-num">1</div><h2>Sizing rules</h2></div>
+      <div class="use-list">
+        <div class="use-item"><div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h7"/></svg></div><div class="use-text"><strong>18px in sidebar &amp; top nav</strong><span>All navigation icons render at 18×18px inside their 34px container.</span></div></div>
+        <div class="use-item"><div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h7"/></svg></div><div class="use-text"><strong>15px in buttons &amp; cards</strong><span>Action icons within buttons and card icon-buttons render at 14–15px.</span></div></div>
+        <div class="use-item"><div class="use-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h7"/></svg></div><div class="use-text"><strong>Always inline SVG</strong><span>No icon fonts or external sprite sheets. Every SVG is embedded inline so it inherits CSS <code style="font-size:11px;background:var(--pp);color:var(--p);padding:1px 4px;border-radius:3px">color</code> via <code style="font-size:11px;background:var(--pp);color:var(--p);padding:1px 4px;border-radius:3px">currentColor</code>.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: BRAND
+════════════════════════════════════════════ -->
+<section class="page" id="page-brand">
+  <div class="breadcrumb"><a onclick="navTo('overview')">Home</a><span class="sep">›</span><span>Patterns</span><span class="sep">›</span><span class="current">Brand &amp; Identity</span></div>
+  <div class="page-hero">
+    <h1>Brand &amp; Identity</h1>
+    <p>The Yonder brand mark is an 8-pointed asterisk (×) — four lines intersecting at 45° intervals, drawn in purple. It never appears in raster form; always as inline SVG so it scales perfectly to any size.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-num">1</div><h2>The Yonder Mark</h2></div>
+    <div class="preview" style="display:flex;gap:32px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,#9f67fa,#6d28d9);border-radius:16px;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 28 28" fill="none" width="34" height="34"><line x1="14" y1="2" x2="14" y2="26" stroke="white" stroke-width="3" stroke-linecap="round"/><line x1="2" y1="14" x2="26" y2="14" stroke="white" stroke-width="3" stroke-linecap="round"/><line x1="5.17" y1="5.17" x2="22.83" y2="22.83" stroke="white" stroke-width="3" stroke-linecap="round"/><line x1="22.83" y1="5.17" x2="5.17" y2="22.83" stroke="white" stroke-width="3" stroke-linecap="round"/></svg>
+        </div>
+        <span style="font-size:11px;color:var(--g400)">App icon (64px)</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:9px">
+          <svg viewBox="0 0 28 28" fill="none" width="26" height="26"><line x1="14" y1="2" x2="14" y2="26" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/><line x1="2" y1="14" x2="26" y2="14" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/><line x1="5.17" y1="5.17" x2="22.83" y2="22.83" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/><line x1="22.83" y1="5.17" x2="5.17" y2="22.83" stroke="#7c3aed" stroke-width="3" stroke-linecap="round"/></svg>
+          <span style="font-size:18px;font-weight:800;letter-spacing:-.2px"><span style="color:var(--p)">×</span> yonder</span>
+        </div>
+        <span style="font-size:11px;color:var(--g400)">Full lockup — sidebar</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--g900);padding:16px 24px;border-radius:12px">
+        <div style="display:flex;align-items:center;gap:9px">
+          <svg viewBox="0 0 28 28" fill="none" width="22" height="22"><line x1="14" y1="2" x2="14" y2="26" stroke="#9f67fa" stroke-width="3" stroke-linecap="round"/><line x1="2" y1="14" x2="26" y2="14" stroke="#9f67fa" stroke-width="3" stroke-linecap="round"/><line x1="5.17" y1="5.17" x2="22.83" y2="22.83" stroke="#9f67fa" stroke-width="3" stroke-linecap="round"/><line x1="22.83" y1="5.17" x2="5.17" y2="22.83" stroke="#9f67fa" stroke-width="3" stroke-linecap="round"/></svg>
+          <span style="font-size:15px;font-weight:800;color:#fff"><span style="color:#9f67fa">×</span> yonder</span>
+        </div>
+        <span style="font-size:11px;color:var(--g500)">On dark</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-num">2</div><h2>Mark Construction</h2></div>
+    <div class="preview white">
+      <div style="display:flex;gap:32px;align-items:center;flex-wrap:wrap">
+        <svg viewBox="0 0 80 80" fill="none" width="120" height="120" style="background:var(--g50);border-radius:10px">
+          <line x1="40" y1="8" x2="40" y2="72" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="8" y1="40" x2="72" y2="40" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="17" y1="17" x2="63" y2="63" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="63" y1="17" x2="17" y2="63" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="40" y1="10" x2="40" y2="70" stroke="#7c3aed" stroke-width="5" stroke-linecap="round"/>
+          <line x1="10" y1="40" x2="70" y2="40" stroke="#7c3aed" stroke-width="5" stroke-linecap="round"/>
+          <line x1="18" y1="18" x2="62" y2="62" stroke="#7c3aed" stroke-width="5" stroke-linecap="round"/>
+          <line x1="62" y1="18" x2="18" y2="62" stroke="#7c3aed" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <div style="font-size:13px;color:var(--g600);line-height:1.9">
+          <p>4 lines, intersecting at center (50%, 50%)</p>
+          <p>Angles: 0°, 45°, 90°, 135°</p>
+          <p>stroke-linecap: <strong>round</strong></p>
+          <p>stroke-width: 3 (28px viewBox)</p>
+          <p>Color on light: <code style="font-size:11px;background:var(--pp);color:var(--p);padding:1px 4px;border-radius:3px">--p</code> #7c3aed</p>
+          <p>Color on dark: #9f67fa (lighter for contrast)</p>
+          <p>Color on gradient button: #fff</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  </main>
+</div><!-- /shell -->
+
+<script>
+/* ── Navigation ───────────────────────────────────────── */
+function navTo(id) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+  var pg = document.getElementById('page-' + id);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0,0); }
+  // Update nav items
+  document.querySelectorAll('.nav-item').forEach(function(a){a.classList.remove('active')});
+  var found = Array.from(document.querySelectorAll('.nav-item')).find(function(a){
+    return a.getAttribute('onclick') && a.getAttribute('onclick').includes("'" + id + "'");
+  });
+  if (found) found.classList.add('active');
+}
+
+/* ── Tab navigation ───────────────────────────────────── */
+document.addEventListener('click', function(e) {
+  var ti = e.target.closest('.tab-nav-item');
+  if (!ti) return;
+  var nav = ti.closest('.tab-nav');
+  nav.querySelectorAll('.tab-nav-item').forEach(function(t){t.classList.remove('active')});
+  ti.classList.add('active');
+  var tabId = ti.dataset.tab;
+  // find all sibling tab panels in the same page
+  var page = ti.closest('.page');
+  page.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active')});
+  var panel = document.getElementById('tab-' + tabId);
+  if (panel) panel.classList.add('active');
+});
+
+/* ── Chip toggle ──────────────────────────────────────── */
+document.addEventListener('click', function(e){
+  var chip = e.target.closest('.chip');
+  if (chip) chip.classList.toggle('on');
+});
+
+/* ── Demo tabs (Tabs page interactive preview) ─────────── */
+function demoTab(btn, panelId) {
+  document.querySelectorAll('.dtab').forEach(function(b){
+    b.style.background = 'transparent';
+    b.style.color = 'var(--g500)';
+    b.style.boxShadow = 'none';
+  });
+  btn.style.background = '#fff';
+  btn.style.color = 'var(--p)';
+  btn.style.boxShadow = '0 1px 4px rgba(80,0,120,.1)';
+  ['who','care','why','what'].forEach(function(id){
+    var p = document.getElementById('demo-panel-' + id);
+    if (p) p.style.display = id === panelId ? 'block' : 'none';
+  });
+}
+</script>
+</body>
+</html>
